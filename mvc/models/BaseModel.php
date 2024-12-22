@@ -4,7 +4,6 @@
         function returnData($query){
             $data = null;
             if($query){
-                $data = array();
                 while ($row = mysqli_fetch_assoc($query)) {
                     $data = $row;
                 }
@@ -25,23 +24,30 @@
             $sql ="SELECT $data FROM $table";
             $query = NULL;
             if (isset($where) && $where != NULL) {
+
                 $fields = array_keys($where);
                 $fields_list = implode("",$fields);
+                
                 $values = array_values($where);
                 $isFields = true;
                 $stringWhere = 'where';
                 $string_Caculator = '=';
+                $stringBindParam = "";
+                foreach($values as $row){
+                    $stringBindParam = $stringBindParam . substr((string)gettype($row), 0, 1);
+                }
                 for ($i=0; $i < count($fields); $i++) { 
+                    
                     preg_match('/<=|>=|<|>|!=/',$fields[$i],$matches,PREG_OFFSET_CAPTURE);
                     if ($matches != null) {
-                    $string_Caculator = $matches[0][0];
+                        $string_Caculator = $matches[0][0];
                     }
                     if (!$isFields) {
-                    $sql .= " and ";
-                    $stringWhere = '';
+                        $sql .= " and ";
+                        $stringWhere = '';
                     }
-                $isFields = false;
-                $sql .= "  ".$stringWhere." ".preg_replace('/<=|>=|<|>|!=/','',$fields[$i])." ".$string_Caculator." ? ";
+                    $isFields = false;
+                    $sql .= "  ".$stringWhere." ".preg_replace('/<=|>=|<|>|!=/','',$fields[$i])." ".$string_Caculator." ? ";
                 }
                 if ($fields_in != NULL && $array_where_in != NULL) {
                     $sql .= ' '.$this->where_in($fields_in,$array_where_in,true).' ';
@@ -55,9 +61,17 @@
                 if ($limit != NULL) {
                     $sql .= " LIMIT ".$start." , ".$limit."";
                 }
-                var_dump($query);
+                $query = $this->con->prepare($sql);
+                $query->bind_param($stringBindParam, ...$fields);
+                $query->execute($values);
 
-                $query = $this->con->query($sql);
+                $result = $query->get_result(); // Lấy kết quả từ câu lệnh đã thực hiện
+                $data = array();
+                while ($row = $result->fetch_assoc()) {
+                    
+                    $data[] = $row;
+                }
+                return $data;
             }
             else{
                 if ($orderby !='' && $orderby != NULL) {
@@ -68,6 +82,7 @@
                 }
                 $query = $this->con->query($sql);
             }
+
             $data = null;
             if($query){
                 $data = array();
@@ -92,10 +107,18 @@
             }, $values);
      
             $newValues = implode(',', $newValues);
-            $sql = "INSERT INTO `".$table."`(".$fields_list.") VALUES ($newValues)";
+            $sql = "INSERT INTO `".$table."`(".$fields_list.") VALUES ($newValues) ";
             $query = $this->con->query($sql);
+            $last_id = $this->con->insert_id;
+            $result = $this->con->query("SELECT * FROM $table WHERE id = $last_id");
+            $data = null;
+            if($result){
+                while ($row = mysqli_fetch_assoc($result)) {
+                    $data = $row;
+                }
+            }
+            return $data;
             
-            return $query;
         }
         function update($table, $data = NULL,$where = NULL){
             if ($data != NULL && $where != NULL) {
@@ -134,12 +157,7 @@
                 }
                 else{
                     return false;
-                    // return json_encode(
-                    //     array(
-                    //         'type'      => 'fails',
-                    //         'Message'   => 'Update data fails',
-                    //     )
-                    // );
+                     
                 }
             }
         }
@@ -216,8 +234,7 @@
             return $query->fetch_assoc();
         }
 
-        function _query($query){
-            $sql = $query;
+        function _query($sql){
             $query = $this->con->query($sql);
             return $query;
         }
@@ -230,6 +247,10 @@
                 $values = array_values($where);
                 $isFields = true;
                 $stringWhere = 'where';
+                $stringBindParam = "";
+                foreach($values as $row){
+                    $stringBindParam = $stringBindParam . substr(gettype($row), 0, 1);
+                }
                 for ($i=0; $i < count($fields); $i++) { 
                     if (!$isFields) {
                     $sql .= " and ";
@@ -265,16 +286,16 @@
             return $query->fetch_assoc();
         }
         // JOIN TABLE
-        function select_array_join_table($table,$data = '*',
+        function select_array_join_table($table, $table_join = NULL ,  $query_join = NULL,
+            $type_join  = 'LEFT', $data = '*',
             $where = NULL,
             $orderby = NULL,
             $start = NULL,
             $limit = NULL,
-            $table_join = NULL,
-            $query_join = NULL,
-            $type_join  = NULL
+           
             ){
             $sql ="SELECT $data FROM $table";
+            $query = NULL;
             if (isset($where) && $where != NULL) {
                 $fields = array_keys($where);
                 $fields_list = implode("",$fields);
@@ -282,8 +303,13 @@
                 $isFields = true;
                 if ($table_join != NULL && $query_join != NULL && $type_join != NULL) {
                     $sql .= ' '.$this->join_table($table_join,$query_join,$type_join).' ';
+
                 }
                 $stringWhere = 'where';
+                $stringBindParam = "";
+                foreach($values as $row){
+                    $stringBindParam = $stringBindParam . substr(gettype($row), 0, 1);
+                }
                 for ($i=0; $i < count($fields); $i++) { 
                     if (!$isFields) {
                     $sql .= " and ";
@@ -299,7 +325,18 @@
                     $sql .= " ORDER BY ".$orderby."";
                 }
                 $query = $this->con->prepare($sql);
-                $query->execute($values);
+                $query->bind_param($stringBindParam, $fields);
+                $query->execute($fields);
+                $result = $query->get_result(); // Lấy kết quả từ câu lệnh đã thực hiện
+
+                $data = array();
+                while ($row = $result->fetch_assoc()) {
+                    
+                    $data[] = $row;
+                }
+
+                return $data;
+      
             }
             else{
                 if ($table_join != NULL && $query_join != NULL && $type_join != NULL) {

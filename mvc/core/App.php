@@ -1,13 +1,14 @@
 <?php 
 class App{
     protected $controller = "Home";
-    protected $action = "index";
+    protected $method = "index";
     protected $params = [];
-    protected $Routes__;
+
     function __construct(){
         $arrayURL = $this->urlProcess();
+        //VD: dashboard/order/update/?id=23 => array([0] => 'dashboard', [1] => 'order', [2] => 'update') 
+        
         //Controller handle
-
         if ($arrayURL != NULL) {
             //Dashboard flow
             if($arrayURL[0] == 'dashboard'){
@@ -23,25 +24,28 @@ class App{
                     }
                 }
                 else{
-                    $this->controller = ucwords($arrayURL[0])."Controller";
-                    require_once "./mvc/controllers/dashboard/".ucwords($arrayURL[0])."Controller.php";
+                    $new_controller = ucwords($arrayURL[0])."Controller";
+                    $this->controller = $new_controller;
+                    require_once "./mvc/controllers/dashboard/".$new_controller.".php";
                     if (class_exists($this->controller)) {
                         unset($arrayURL[0]);
                         unset($arrayURL[1]);
                     }
                 
                 }
+                //Khởi tạo lớp controller
                 $this->controller = new $this->controller;
-                 //Method handle
+
+                //Method handle
                 if (isset($arrayURL[2])) { //Nếu tồn tại method thì gán
                     if (method_exists($this->controller,$arrayURL[2])) {
-                        $this->action = $arrayURL[2];
+                        $this->method = $arrayURL[2];
                         unset($arrayURL[2]);
                     }
                 }
                 else{
                     if (method_exists($this->controller,'index')) {
-                        $this->action = 'index';
+                        $this->method = 'index';
                     }
                     else{
                         require_once "./mvc/views/client/error-404.php";
@@ -67,13 +71,13 @@ class App{
                  //Method handle
                 if (isset($arrayURL[1])) { //Nếu tồn tại method thì gán
                     if (method_exists($this->controller,$arrayURL[1])) {
-                        $this->action = $arrayURL[1];
+                        $this->method = $arrayURL[1];
                         unset($arrayURL[1]);
                     }
                 }
                 else{
                     if (method_exists($this->controller,'index')) {
-                        $this->action = 'index';
+                        $this->method = 'index';
                     }
                     else{
                         require_once "./mvc/views/client/error-404.php";
@@ -88,29 +92,26 @@ class App{
             require_once "./mvc/views/client/error-404.php";
             return;
         }
-
+        // => Truy cập được vào file
      
         //Param handle
         $this->params = $arrayURL ? array_values($arrayURL) : [];
-        call_user_func_array([$this->controller,$this->action],$this->params);
+
+        //Gọi hàm
+        call_user_func_array([$this->controller,$this->method],$this->params);
+
     }
 
 
-    function getUrl(){
+    function urlProcess(){
+        $url = '';
         if (isset($_SERVER['PATH_INFO'])) {
             $url = $_SERVER['PATH_INFO'];
         }
         else{
             $url = '/';
         }
-        return $url;
-    }
-
-    function urlProcess(){
-        // $this->Routes__ = new Routes();
-        $initURL = $this->getUrl();
-        // $returnUrl = $this->Routes__->handleUrl($initURL);
-
-        return explode("/",filter_var(trim($initURL,"/")));
+        return explode("/",filter_var(trim($url,"/")));
+        //Trả về associative array các thành phần của URL
     }
 }

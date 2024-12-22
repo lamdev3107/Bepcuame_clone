@@ -1,7 +1,6 @@
 <?php 
 define('base_url','http://localhost/bepcuame/');
 define('base_url_admin','http://localhost/bepcuame/admin/');
-define('KEYS','ABCXYZ!@#$');
 define('HOST','smtp.gmail.com');
 define('USERNAME', 'your mail');
 define('PASSWORD', 'application password');

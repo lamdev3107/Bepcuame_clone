@@ -8,9 +8,7 @@
   <div class="card-body">
     <div class="d-flex justify-content-between align-items-end"> 
       <h6 class="text-primary">Danh sách tài khoản người dùng</h6>
-      <?php if (isset($_SESSION['isLogin_Admin']) && $_SESSION['isLogin_Admin'] == true) { ?>
       <a href="dashboard/user/add" type="button" class="btn btn-primary">Thêm mới</a>
-      <?php } ?>
     </div>
       
     <?php if (isset($_COOKIE['msg'])) { ?>
@@ -65,15 +63,10 @@
               }
               ?>
             </td>
-            <td style="padding: 8px 20px;">
-              <a href="dashboard/user/detail/?id=<?= $row['id'] ?>" type="button" class="btn btn-info">Xem</a>
-              <?php if (isset($_SESSION['isLogin_Admin']) && $_SESSION['isLogin_Admin'] == true) { ?>
-              <a href="dashboard/user/update/?id=<?= $row['id'] ?>" type="button" class="btn btn-warning">Sửa</a>
-                <?php if(isset($_SESSION['user']['id']) && $_SESSION['user']['id'] != $row['id']){ ?>
-                  <a href="dashboard/user/delete/?id=<?= $row['id'] ?>" onclick="return confirm('Bạn có thật sự muốn xóa ?');" type="button" class="btn btn-danger">Xóa</a>
-                <?php } ?>
-            
-              <?php }?>
+            <td style="padding-left:  20px;  ">
+              <a href="dashboard/user/detail/?id=<?= $row['id'] ?>" style="width: 40px; height: 40px" type="button" class="btn btn-info"><i style="font-size: 16px; " class="fa-solid fa-info"></i></a>
+              <a href="dashboard/user/update/?id=<?= $row['id'] ?>" type="button" style="width:40px; height: 40px" class="btn btn-warning"><i class="fa-regular fa-pen-to-square"></i></a>
+              <a href="dashboard/user/delete/?id=<?= $row['id'] ?>" onclick="return confirm('Bạn có thật sự muốn xóa ?');" type="button" style="width: 40px; height: 40px" class="btn btn-danger"><i class="fa-regular fa-trash-can"></i></a>
             </td>
           </tr>
         <?php } ?>

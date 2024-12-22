@@ -5,33 +5,30 @@
     </h6>
   </div>
   <div class="card-body">
-    <div class="d-flex justify-content-between align-items-end"> 
+    <div class="d-flex justify-content-between align-items-end mb-4"> 
       <h6 class="text-primary">Danh sách Banner</h6>
-      <?php if (isset($_SESSION['isLogin_Admin']) && $_SESSION['isLogin_Admin'] == true) { ?>
+      <?php if (isset($_SESSION['user']) && $_SESSION['user']['auth_id'] == 2) { ?>
       <a href="dashboard/banner/add" type="button" class="btn btn-primary">Thêm mới</a>
     <?php } ?>
     </div>
-    <hr>
-    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+    <table class="table table-bordered"  width="100%" cellspacing="0">
       <thead>
         <tr>
           <th scope="col">ID</th>
           <th scope="col">Hình Ảnh</th>
-          <th scope="col">#</th>
+          <th scope="col">Thao tác</th>
         </tr>
       </thead>
       <tbody>
         <?php  foreach ($banners as $row) { ?>
           <tr>
-            
-            <td><?= $row['id'] ?></td>
-            <td><?= $row['image'] ?></td>
-            <td>
-              <a href="dashboard/banner/detail/?id=<?= $row['id'] ?>" class="btn btn-success">Xem</a>
-                  <?php if (isset($_SESSION['isLogin_Admin']) && $_SESSION['isLogin_Admin'] == true) { ?>
-                  <a href="dashboard/banner/update/?id=<?= $row['id'] ?>" class="btn btn-warning">Sửa</a>
-                  <a href="dashboard/banner/delete/?id=<?= $row['id'] ?>" onclick="return confirm('Bạn có thật sự muốn xóa ?');" type="button" class="btn btn-danger">Xóa</a>
-                  <?php }?>
+            <td class="pl-3"><?= $row['id'] ?></td>
+            <td><img src="<?= $row['image'] ?>" class="object-fit-contain " style="width: 90%" alt="banner"/></td>
+            <td class=" gap-2" style="width: 110px">
+              <?php if (isset($_SESSION['user']) && $_SESSION['user']['auth_id'] == 2) { ?>
+              <a  href="dashboard/banner/update/?id=<?= $row['id'] ?>" style="width:40px; height: 40px" class="btn btn-warning"><i class="fa-regular fa-pen-to-square"></i></a>
+              <a  href="dashboard/banner/delete/?id=<?= $row['id'] ?>" onclick="return confirm('Bạn có thật sự muốn xóa ?');" type="button" style="width: 40px; height: 40px" class="btn btn-danger"><i class="fa-regular fa-trash-can"></i></a>
+              <?php }?>
             </td>
           </tr>
         <?php } ?>

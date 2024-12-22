@@ -26,7 +26,7 @@ class BannerController extends Controller{
     }
     public function add(){
         if($_SERVER['REQUEST_METHOD'] == 'POST'){
-            $target_dir = "./public/img/banners/";  // thư mục chứa file upload
+            $target_dir = "public/img/banners/";  // thư mục chứa file upload
             $image = "";
 
             $target_file = $target_dir . basename($_FILES["image"]["name"]); // link sẽ upload file lên
@@ -34,7 +34,7 @@ class BannerController extends Controller{
             $status_upload = move_uploaded_file($_FILES["image"]["tmp_name"], $target_file);
 
             if ($status_upload) { // nếu upload file không có lỗi 
-                $image =  "img/banners/" . basename($_FILES["image"]["name"]);
+                $image =  $target_file;
             }
             $data = array(
                 'image' => $image
@@ -56,6 +56,8 @@ class BannerController extends Controller{
             } else {
                 setcookie('noti-type', 'error', time() + 2);
                 setcookie('noti-message', 'Tạo banner thất bại!', time() + 2);
+                $redirect = new redirect('dashboard/banner/add');
+
             }
          
         }
@@ -87,8 +89,9 @@ class BannerController extends Controller{
         $banner = $this->BannerModel->findBanner($id);
         if($_SERVER['REQUEST_METHOD'] == 'POST'){
            if($_FILES["image"]['name'] != ""){
+                echo "Hello";
                 $image = "";
-                $target_dir = "./public/img/banner/";  // thư mục chứa file upload
+                $target_dir = "public/img/banners/";  // thư mục chứa file upload
                 $target_file = $target_dir . basename($_FILES["image"]["name"]); // link sẽ upload file lên
                 $status_upload = move_uploaded_file($_FILES["image"]["tmp_name"], $target_file);
 
@@ -113,6 +116,7 @@ class BannerController extends Controller{
             else{
                 setcookie('noti-type', 'error', time() + 2);
                 setcookie('noti-message', 'Câp nhật banner thất bại!', time() + 2);
+                $redirect = new redirect('dashboard/banner/update/?id='.$id);
                 return;
             }
         }

@@ -22,8 +22,8 @@
                 <input type="hidden" name="id" disabled value="<?= $data['id'] ?>">
                 <div class="form-group mb-4">
                     <label for="">Hình ảnh</label>
-                    <div class="my-2 <?= $data['image']== '' ? 'd-none' : 'd-block'  ?>  banner-img" style="width:200px; height: 200px ">
-                        <img  src="<?=$data['image']?>"    alt="" style="object-fit:contain; width:200px; height:200px"   class=" shadow-sm mb-3 ">
+                    <div class="my-2 w-100 <?= $data['image']== '' ? 'd-none' : 'd-block'  ?>  banner-img" style=";  ">
+                        <img  src="<?=$data['image']?>"    alt="" style="object-fit:contain; width:100%; "   class=" shadow-sm mb-3 ">
                     </div>
                     <input type="file" class="form-control" id="" placeholder="" name="image"  onchange="displayImg(this,$(this), '.banner-img')" value="<?=$data['image']?>">
                 </div>

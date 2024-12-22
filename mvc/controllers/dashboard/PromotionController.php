@@ -52,6 +52,7 @@ class PromotionController extends Controller{
             } else {
                 setcookie('noti-type', 'error', time() + 2);
                 setcookie('noti-message', 'Tạo mới khuyến mãi thất bại', time() + 2);
+                $redirect = new redirect('dashboard/promotion/add');
             }
             
         }
@@ -108,6 +109,7 @@ class PromotionController extends Controller{
             else{
                 setcookie('noti-type', 'error', time() + 2);
                 setcookie('noti-message', 'Câp nhật khuyến mãi thất bại', time() + 2);
+                $redirect = new redirect('dashboard/promotion/update/?id='.$id);
                 return;
             }
         }

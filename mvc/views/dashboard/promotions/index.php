@@ -7,9 +7,7 @@
   <div class="card-body">
     <div class="d-flex justify-content-between align-items-end"> 
       <h6 class="text-primary">Danh sách khuyến mãi</h6>
-      <?php if (isset($_SESSION['isLogin_Admin']) && $_SESSION['isLogin_Admin'] == true) { ?>
       <a href="dashboard/promotion/add" type="button" class="btn btn-primary">Thêm mới</a>
-    <?php } ?>
     </div>
     <hr>
     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -32,11 +30,10 @@
             <td><?= $row['value'] ?></td>
             <td><?= $row['start_day'] ?></td>
             <td>
-              <a href="dashboard/promotion/detail/?id=<?= $row['id'] ?>" class="btn btn-success">Xem</a>
-              <?php if (isset($_SESSION['isLogin_Admin']) && $_SESSION['isLogin_Admin'] == true) { ?>
-              <a href="dashboard/promotion/update/?id=<?= $row['id'] ?>" class="btn btn-warning">Sửa</a>
-              <a href="dashboard/promotion/delete/?id=<?= $row['id'] ?>" onclick="return confirm('Bạn có thật sự muốn xóa ?');" type="button" class="btn btn-danger">Xóa</a>
-              <?php }?>
+              <a href="dashboard/promotion/detail/?id=<?= $row['id'] ?>" style="width: 40px; height: 40px" class="btn btn-success"><i style="font-size: 16px" class="fa-solid fa-info"></i></a>
+           
+              <a href="dashboard/promotion/update/?id=<?= $row['id'] ?>" style="width:40px; height: 40px" class="btn btn-warning"><i class="fa-regular fa-pen-to-square"></i></a>
+              <a href="dashboard/promotion/delete/?id=<?= $row['id'] ?>" onclick="return confirm('Bạn có thật sự muốn xóa ?');" type="button" style="width: 40px; height: 40px" class="btn btn-danger"><i class="fa-regular fa-trash-can"></i></a>
             </td>
           </tr>
         <?php } ?>

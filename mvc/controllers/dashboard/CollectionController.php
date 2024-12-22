@@ -4,8 +4,10 @@ require_once "./mvc/helper/HelperFunctions.php";
 
 class CollectionController extends Controller{
     private $CollectionModel;
+    private $CollectionProductModel;
     public function __construct(){
         $this->CollectionModel = $this->model('Collection');
+        $this->CollectionProductModel = $this->model('CollectionProduct');
     }
     public function index(){
         $collectionData = $this->CollectionModel->getAllCollection("created_at ASC");
@@ -17,17 +19,16 @@ class CollectionController extends Controller{
     }
     public function detail(){
         $id = isset($_GET['id']) ? $_GET['id'] : 1;
-        $collection = $this->CollectionModel->findCollection($id);
+        $collection = $this->CollectionModel->findCollection((int)$id);
+        $products = $this->CollectionModel->getProductsOfCollection($id);
         $data = [
             'page'          => 'collections/detail',
-            'data'       => $collection,
+            'collection'       => $collection,
+            'products' => $products,
         ];
         $this->view('dashboard/dashboard-layout',$data);
     }
-    public function create_slug($string) {
-        $slug = preg_replace('/[^a-zA-Z0-9_\-]/', '', strtolower($string));
-        return $slug;
-    }
+
     public function add(){
         if($_SERVER['REQUEST_METHOD'] == 'POST'){
             $image = "";
@@ -63,8 +64,6 @@ class CollectionController extends Controller{
                 $_SESSION['alert_type'] = "success";
                 $_SESSION['alert_message'] ="Tạo mới danh mục thành công!";
                 $_SESSION['alert_timer'] = true;
-                setcookie('noti-message', 'Đăng ký thành công, Vui lòng đăng nhập lại!', time() + 2);
-                setcookie('noti-type', 'success', time() + 2);
                 $redirect = new redirect('dashboard/collection');
                 return;
 
@@ -139,8 +138,6 @@ class CollectionController extends Controller{
                 $_SESSION['alert_type'] = "success";
                 $_SESSION['alert_message'] ="Cập nhật danh mục thành công!";
                 $_SESSION['alert_timer'] = true;
-                setcookie('noti-message', 'Cập nhật danh mục thành công!', time() + 2);
-                setcookie('noti-type', 'success', time() + 2);
                 $data = $this->CollectionModel->findCollection($id);
                 $redirect = new redirect('dashboard/collection');
                 return;
@@ -148,6 +145,7 @@ class CollectionController extends Controller{
             else{
                 setcookie('noti-type', 'error', time() + 2);
                 setcookie('noti-message', 'Câp nhật danh mục không thành công!', time() + 2);
+                $redirect = new redirect('dashboard/collection/update/?id='.$id);
                 return;
             }
         }
@@ -157,6 +155,53 @@ class CollectionController extends Controller{
             'data' => $collection,
         ];
         $this->view('dashboard/dashboard-layout',$data);
+    }
+
+    public function addProductToCollection(){
+        $collectionId = (int)$_POST['collectionId'];
+        $productId = (int)$_POST['productId'];
+        $res = $this->CollectionProductModel->addCollectionProduct(['collection_id' => $collectionId, 'product_id' => $productId]);
+        if($res){
+            echo "success";
+        }
+    }
+
+    public function deleteProductFromCollection(){
+        $collectionId = (int)$_GET['collectionId'];
+        $productId = (int)$_GET['productId'];
+        var_dump($collectionId, $productId);
+        $res = $this->CollectionProductModel->deleteCollectionProduct(['collection_id' => $collectionId, 'product_id' => $productId]);
+        if($res){
+            $_SESSION['alert_type'] = "success";
+            $_SESSION['alert_message'] ="Xóa sản phẩm khỏi danh mục thành công!";
+            $_SESSION['alert_timer'] = true;
+            $redirect = new redirect('dashboard/collection/detail/?id='.$collectionId);
+        }
+      
+    }
+    public function findProductByName(){
+        $name = $_POST['query'];
+        $collectionId = $_POST['collectionId'];
+        // $products = $this->CollectionModel->findProductByName($name, $collectionId);
+        $listProductId = $this->CollectionProductModel->getProductIdsOfCollection($collectionId);
+        $listProductIdValues = array();
+        for($i = 0; $i < count($listProductId); $i++){
+            $listProductIdValues[] = (int)$listProductId[$i]['product_id'];
+
+        }
+        // $not_in_convert = 'NULL';
+        // if(count($listProductId) > 0){
+        //     $not_in_convert = implode(',', $listProductId);
+        // }
+        // Kiểm tra xem nút tìm kiếm đã được nhấp chưa
+        if (isset($name) && $name != "") {
+            // Tìm kiếm sản phẩm theo tên
+            $products = $this->CollectionModel->findProductByName($name, $collectionId, $listProductIdValues);
+            $json = json_encode($products);
+            echo $json;
+            //  $sql = "SELECT DISTINCT p.id, p.name, p.slug, p.price, p.stock, p.image1, cp.product_id, cp.collection_id FROM products as p LEFT JOIN collection_products as cp ON p.id = cp.product_id WHERE p.name LIKE '%$name%' AND (cp.collection_id != collectionId  OR ISNULL(cp.collection_id)) AND cp.product_id NOT IN ($not_in_convert);";
+            // var_dump($sql);
+        }
     }
 }
 

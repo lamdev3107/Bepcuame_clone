@@ -17,7 +17,7 @@
                 </div>
             <?php } ?>
         <?php } ?>
-        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+        <table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
             <form action="dashboard/collection/update/?id=<?=$data['id']?>" method="POST" role="form" enctype="multipart/form-data">
                 <div class="form-group mb-4">
                     <label for="">ID</label>

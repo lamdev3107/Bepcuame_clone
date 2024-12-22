@@ -9,9 +9,27 @@ class OrderController extends Controller{
         $this->OrderModel = $this->model('Order');
         $this->OrderDetailModel = $this->model('OrderDetail');
     }
+// Processing: Đơn hàng đang được xử lý.
+// Completed: Đơn hàng đã hoàn tất.
+// Failed: Đơn hàng không thành công (thường do lỗi thanh toán).
+// Shipped: Đơn hàng đã đang giao.
+// Returned: Đơn hàng đã bị trả lại.
     public function index(){
-        $orderData = $this->OrderModel->getAllOrder("created_at ASC");
-
+        
+        $orderData = NULL;
+        
+        if(isset($_GET['status'])){
+            $status = isset($_GET['status']) ? $_GET['status'] : NULL;
+            if($status !== ""){
+                $orderData = $this-> OrderModel->getOrderByStatus($status);
+            }
+            else{
+                $orderData = $this->OrderModel->getAllOrder();
+            }
+        }
+        else{
+            $orderData = $this->OrderModel->getAllOrder();
+        }
         $data = [
             'page'          => 'orders/index',
             'data'       => $orderData,
@@ -19,30 +37,18 @@ class OrderController extends Controller{
         $this->view('dashboard/dashboard-layout',$data);
     }
     public function detail(){
-        $id = isset($_GET['id']) ? $_GET['id'] : 1;
+        $id = isset($_GET['id']) ? (int)$_GET['id'] : NULL;
         $order = $this->OrderModel->findOrder($id);
-        // $orderDetail = $this->OrderDetailModel->getOrderDetailOfOrder($id);
-        // print_r($order);
+        $orderDetails = $this->OrderDetailModel->getOrderDetailOfOrder($id);
         $data = [
             'page'          => 'orders/detail',
             'order'       => $order,
-            // 'orderDetail' => $orderDetail,
+            'orderDetails' => $orderDetails,
         ];
         $this->view('dashboard/dashboard-layout',$data);
     }
-    public function create_slug($string) {
-        $slug = preg_replace('/[^a-zA-Z0-9_\-]/', '', strtolower($string));
-        return $slug;
-    }
+ 
 
-    function confirmOrder(){
-        $data = array(
-            'id' => $_GET['id'],
-            'status' => 1,
-        );
-        
-        $this->OrderModel->update($data);
-    }
     public function add(){
         if($_SERVER['REQUEST_METHOD'] == 'POST'){
             $image = "";
@@ -84,6 +90,7 @@ class OrderController extends Controller{
             } else {
                 setcookie('noti-type', 'error', time() + 2);
                 setcookie('noti-message', 'Tạo danh mục không thành công!', time() + 2);
+                
                 return;
             }
             
@@ -95,6 +102,30 @@ class OrderController extends Controller{
         $this->view('dashboard/dashboard-layout',$data);
 
     }
+
+    public function statistic(){
+        $statusStatistic = $this -> OrderModel-> getStatusStatistics();
+        $statusStatistic = json_encode($statusStatistic);
+
+        $revenueByMonths = $this -> OrderModel->getRevenueByMonth();
+        $revenueByMonths = json_encode($revenueByMonths);
+
+        $uncompletedOrderStatistic = $this->OrderModel->getUncompletedOrdersCount();
+        $m = date("m");
+        $monthlyRevenueStatistic = $this->OrderModel->getMonthlyRevenue($m);
+        $y = "20".date("y");
+        $yearlyRevenueStatistic = $this->OrderModel->getYearlyRevenue($y);
+        
+        $data = [
+            'page'          => 'orders/statistic',
+            'statusStatistic' => $statusStatistic,
+            'uncompletedOrderStatistic' => $uncompletedOrderStatistic,
+            'monthlyRevenueStatistic' => $monthlyRevenueStatistic,
+            'yearlyRevenueStatistic' => $yearlyRevenueStatistic,
+            'revenueByMonths' => $revenueByMonths,
+        ];
+        $this->view('dashboard/dashboard-layout',$data);
+    }
   
     public function delete()
     {   
@@ -104,73 +135,94 @@ class OrderController extends Controller{
             $_SESSION['alert_type'] = "success";
             $_SESSION['alert_message'] ="Xóa đơn hàng thành công!";
             $_SESSION['alert_timer'] = true;
-            print_r($_SESSION['alert_type']);
             $redirect = new redirect('dashboard/order');
           
         }
 
     }
-
-    public function update(){
+    public function delete_order_detail()
+    {   
         $id = $_GET['id'];
-        $order = $this->OrderModel->findOrder($id);
-        if($_SERVER['REQUEST_METHOD'] == 'POST'){
-            $data = array();
-            $status = 0;
-            if(isset($_POST['status'])){
-                $status = $_POST['status'];
-            }
-            if($_FILES["image"]['name'] != ""){
-                $image = "";
-                $target_dir = "./public/img/order/";  // thư mục chứa file upload
-                $target_file = $target_dir . basename($_FILES["image"]["name"]); // link sẽ upload file lên
-                $status_upload = move_uploaded_file($_FILES["image"]["tmp_name"], $target_file);
-
-                if ($status_upload) { // nếu upload file không có lỗi 
-                    $image =  $target_file;
-                }
-                $data = array(
-                'name' =>    $_POST['name'],
-                'image'  =>   $image,
-                'slug' => HelperFunction::create_slug($_POST['name'])    ,
-                'description' => $_POST['description'],
-                'status' => $status,
-                );
-            }
-            else{
-                $data = array(
-                'name' =>    $_POST['name'],
-                'slug' => HelperFunction::create_slug($_POST['name'])    ,
-                'description' => $_POST['description'],
-                'status' => $status,
-                );
-            }
+        $query = $this->OrderDetailModel->deleteOrderDetail($id);
+        if($query){
+            $_SESSION['alert_type'] = "success";
+            $_SESSION['alert_message'] ="Xóa sản phẩm khỏi đơn hàng thành công!";
+            $_SESSION['alert_timer'] = true;
+            // $redirect = new redirect('dashboard/order/update/?id='.$id);
           
-           
-            $isUpdated = $this->OrderModel->updateOrder($id, $data);
-            if($isUpdated){
-                $_SESSION['alert_type'] = "success";
-                $_SESSION['alert_message'] ="Cập nhật danh mục thành công!";
-                $_SESSION['alert_timer'] = true;
-                setcookie('noti-message', 'Cập nhật danh mục thành công!', time() + 2);
-                setcookie('noti-type', 'success', time() + 2);
-                $data = $this->OrderModel->findOrder($id);
-                $redirect = new redirect('dashboard/order/update?id='.$id);
-                return;
+        }
+
+    }
+
+    public function update_order_detail(){
+        $id = isset($_GET['id']) ? (int)$_GET['id'] : NULL;
+        if($_SERVER['REQUEST_METHOD'] == 'POST'){
+            $data = array(
+                'quantity'  =>   $_POST['quantity'],
+            );
+            foreach ($data as $key => $value) {
+                if (strpos($value, "'") != false) {
+                    $value = str_replace("'", "\'", $value);
+                    $data[$key] = $value;
+                }
             }
-            else{
-                setcookie('noti-type', 'error', time() + 2);
-                setcookie('noti-message', 'Câp nhật danh mục không thành công!', time() + 2);
-                return;
+            $res = $this->OrderDetailModel->updateOrderDetail($id, $data);
+            if ($res === true) {
+                echo "success";
+
+            } else {
+                echo "error";
             }
+            return;
+        }
+    }
+    public function update(){
+        $id = isset($_GET['id']) ? (int)$_GET['id'] : NULL;
+        //Trả về Order 
+        $order = $this->OrderModel->findOrder($id);
+
+        //Trả về OrderDetail gồm các thông tin mặt hàng
+        $orderDetails = $this->OrderDetailModel->getOrderDetailOfOrder($id);
+
+    
+        if($_SERVER['REQUEST_METHOD'] == 'POST'){
+            $data = array(
+                'recepient_name'  =>   $_POST['name'],
+                'status' => $_POST['status'],
+                'phone' => $_POST['phone'],
+                'address' => $_POST['address'],
+                'date_received' => $_POST['date_received'],
+                'time_received' => $_POST['time_received'],
+                'note' => $_POST['note'],
+                'total_price' => $_POST['total_price'],
+              
+            );
+            foreach ($data as $key => $value) {
+                if (strpos($value, "'") != false) {
+                    $value = str_replace("'", "\'", $value);
+                    $data[$key] = $value;
+                }
+            }
+            $res = $this->OrderModel->updateOrder($id, $data);
+            if ($res === true) {
+                echo "success";
+
+            } else {
+                echo "error";
+            }
+            return;
         }
         
         $data = [
             'page'          => 'orders/update',
-            'data' => $order,
+            'order'       => $order,
+            'orderDetails' => $orderDetails,
         ];
+        //Gọi phương thức view, truyền vào đường dẫn đến file layout và data được sử dụng ở file view
         $this->view('dashboard/dashboard-layout',$data);
     }
+
+
 }
 
 ?>

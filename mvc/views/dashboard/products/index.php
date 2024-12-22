@@ -7,38 +7,38 @@
   <div class="card-body">
     <div class="d-flex justify-content-between align-items-end"> 
       <h6 class="text-primary">Danh sách sản phẩm</h6>
-      <?php if (isset($_SESSION['isLogin_Admin']) && $_SESSION['isLogin_Admin'] == true) { ?>
       <a href="dashboard/product/add" type="button" class="btn btn-primary">Thêm mới</a>
-    <?php } ?>
     </div>
     <hr>
-    <table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
+    <table class="table table-bordered table-striped align-middle" id="dataTable" width="100%" cellspacing="0">
       <thead>
         <tr>
           <th scope="col">Mã sản phẩm</th>
-          <th scope="col">Sản phẩm Giá trành</th>
-          <th scope="col">Giá thành/1 đơn v</th>
+          <th scopt="col">Tên sản phẩm</th>
+          <th scopt="col">Slug</th>
+          <th scope="col">Hình ảnh </th>
+          <th scope="col">Giá thành</th>
           <th scope="col">Số lượng</th>
-          <th scope="col">Trạng thái</th>
-          <th>#</th>
+          <th>Thao tác</th>
         </tr>
       </thead>
       <tbody>
         <?php foreach ($products as $row) { ?>
           <tr>
-            <th scope="row"><?= $row['id'] ?></th>
-            <td><?= $row['name'] ?></td>
-            <td><?= $row['price'] ?> VNĐ</td>
-            <td><?= $row['quantity'] ?></td>
-            <td><?= $row['status'] == 1 ? 'Hiển thị' : 'Ẩn'?></td>
-            <td style="padding: 8px 20px;">
-                <?php if (isset($_SESSION['isLogin_Admin']) && $_SESSION['isLogin_Admin'] == true) { ?>
-                <a href="dashboard/product/update/?id=<?= $row['id'] ?>" type="button" class="btn btn-warning">Sửa</a>
-                  <?php if(isset($_SESSION['user']['id']) && $_SESSION['user']['id'] != $row['id']){ ?>
-                    <a href="dashboard/product/delete/?id=<?= $row['id'] ?>" onclick="return confirm('Bạn có thật sự muốn xóa ?');" type="button" class="btn btn-danger">Xóa</a>
-                  <?php } ?>
+            <td style="vertical-align: middle"><?= $row['id'] ?></td>
+            <td style="vertical-align: middle"><?= $row['name'] ?></td>
+            <td style="vertical-align: middle"><?= $row['slug'] ?></td>
+            <td style="vertical-align: middle">
+              <img src="<?= $row['image1'] ?>" height="60px">
+            </td>
+            <td style="vertical-align: middle"><?= number_format($row['price']) ?>đ</td>
+            <td style="vertical-align: middle"><?= $row['stock'] ?></td>
+            <td  style="padding: 8px 20px; width: 100px; vertical-align:middle">
+               
+                <a href="dashboard/product/update/?id=<?= $row['id'] ?>" type="button" style="width:40px; height: 40px" class="btn btn-warning"><i class="fa-regular fa-pen-to-square"></i></a>
+                
+                <a href="dashboard/product/delete/?id=<?= $row['id'] ?>" onclick="return confirm('Bạn có thật sự muốn xóa ?');" type="button" style="width: 40px; height: 40px" class="btn btn-danger"><i class="fa-regular fa-trash-can"></i></a>
               
-                <?php }?>
               </td>
           </tr>
         <?php } ?>

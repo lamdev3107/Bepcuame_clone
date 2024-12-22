@@ -1,36 +1,91 @@
 
 <div class="container  main-container" style="margin-top: 40px">
-
-    <div id="carouselExampleIndicators" class="carousel slide" data-interval="true">
-
-    <div class="carousel-indicators">
-      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-    </div>
-
-
-    <div class="carousel-inner animate__animated animate__slideInRight">
-      <div class="carousel-item active">
-        <img src="public/img/banners/slider_1.jpg" class="d-block w-100 object-fit-cover" alt="...">
+    <div class="owl-carousel-wrapper position-relative">
+      <div class="owl-carousel banner-slider">
+        <?php  foreach ($banners as $row) { ?>
+            <div class="item p-1"> 
+              <img src="<?=$row['image'] ?>" class="" alt="banner">
+            </div>
+        <?php }?>
       </div>
-      <div class="carousel-item">
-          <img src="public/img/banners/slider_2.jpg" class="d-block w-100 object-fit-cover" alt="images/slider_2.jpg">
-      </div>
-    </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
-    </button>
-  </div>
+        <div class="custom-nav position-absolute" >
+          <button class="prevBtn banner-next" class="hidden"><i class="fa-solid fa-angle-left"></i></i></button>
+          <button class="nextBtn banner-prev"><i class="fa-solid fa-angle-right"></i></button>
+      </div>     
+    </div>  
+                      
 </div>
 
-<div class="container main-container d-flex justify-content-center" style="margin-top: 40px; ">
-  <img src="public/img/banners/section_hot_banner.png" alt="seperate-banner">
-</div>
+<script>
+   $(document).ready(function() {
+        //----------Carousel ------------//
+        let banner_slider  =  $('.banner-slider').owlCarousel({
+            loop: true,
+            margin: 28,
+            nav: false,
+            dots: true,
+            autoplay: true,
+            autoplayTimeout: 3000,
+            navRewind: true, 
+            lazyLoad: true,
+            navText: [
+                "<i class='fa fa-caret-left'></i>",
+                "<i class='fa fa-caret-right'></i>"
+            ],
+            autoplayHoverPause: true,
+            onInitialized: (e) => checkNavigation(e, $(".banner-next"), $(".banner-prev")),
+            onChanged: (e) => checkNavigation(e, $(".banner-next"), $(".banner-prev")),
+            responsive: {
+                0: {
+                items: 1,
+                slideBy:1
+                },
+                600: {
+                items: 1,
+                slideBy: 3
+                },
+                1000: {
+                items: 1,
+                slideBy: 4,
+                }
+            }
+        })
+        function checkNavigation(event, prevBtn, nextBtn) {
+            var items = event.item.count;        // Tổng số item
+            var item = event.item.index;         // Vị trí hiện tại
+            // Ẩn/Hiện nút Prev
+            if (item === 0) {
+                prevBtn.addClass("hidden");
+            } else {
+                prevBtn.removeClass("hidden");
+            }
+            // Ẩn/Hiện nút Next
+            if (item === items - 1) {
+                nextBtn.addClass("hidden");
+            } else {
+                nextBtn.removeClass("hidden");
+            }
+        }
+        function controlCarousel(sliderObj, prevBtn, nextBtn) {
+              // Nút Prev và Next hoạt động
+            prevBtn.click(function() {
+                sliderObj.trigger("prev.owl.carousel");
+            });
+            nextBtn.click(function() {
+                sliderObj.trigger("next.owl.carousel");
+            });
+        }
+   
+        controlCarousel(banner_slider, $(".banner-prev"), $(".banner-next"));
+
+
+       
+       
+    });
+</script>
+
+
+
 
 
 

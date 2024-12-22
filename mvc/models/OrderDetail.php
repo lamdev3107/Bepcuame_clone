@@ -4,22 +4,44 @@ class OrderDetail extends BaseModel{
     private $table = 'order_details';
 
     public function addOrderDetail($dataArray){
-        $query = $this->add($this->table, $dataArray);
-        if($query){ return true;}
-        else return false;
+        $insertedData = $this->add($this->table, $dataArray);
+        return $insertedData;
     }
     public function getOrderDetailOfOrder($order_id){
-        return $this-> select_array($this->table, "*", ['order_id' => $order_id]);
+        // $data =  $this-> select_array_join_table($this->table, 'products', 'order_details.product_id = products.id', 'LEFT', "*", ['order_id' => $order_id ]);
+        $sql = "SELECT * FROM `order_details` as od
+            LEFT JOIN `products` as p ON od.product_id = p.id
+            WHERE od.order_id = $order_id";
+        $query = $this->_query($sql);
+        $data = array();
+        if($query){
+            while ($row = mysqli_fetch_assoc($query)) {
+                $data[] = $row;
+            }
+        }
+        return $data;
+
     }
- 
+     public function findOrderDetailById($id){
+        $query = "select * from $this->table where id =$id";
+        return $this->returnData($this->_query($query));
+    }
     public function deleteOrderDetail($id){
-        $res = $this->delete('order', ['id' => $id]);
+        $res = $this->delete($this->table, ['id' => $id]);
         if($res){
             return true;
         }
         return false;
     }
 
+    public function updateOrderDetail($id, $dataArray){
+        $res = $this->update($this->table, $dataArray, ['id' => $id]);
+        
+        if($res){
+            return true;
+        }
+        return false;
+    }
     function getAllOrderDetail(){
         return $this->select_array($this->table, "*");
     }

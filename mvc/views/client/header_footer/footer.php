@@ -1,10 +1,31 @@
+
+<div class="container-fluid" style="background-color: #f8f8f8">
+     <div class="row mx-5" action="account/register">
+        <div class="col-sm-8 mx-auto px-5">
+            <div class="main-input py-5 new-customer" id="dangky">
+                <div class="log-title mb-3 text-center">
+                    <p style="font-style: bold; font-size: 20px ">Đăng ký nhận tin</p>
+                </div>
+                <form  method="post" action="account/register-email">
+                    <div class="mb-2" class="position-relative " style="position: relative; border:none">
+                        <input  type="email" name="email" class="form-control py-2" placeholder="Nhập địa chỉ email..." >
+                        <button type="submit" class="btn btn-warning rounded-left-0 rounded-right position-absolute top-0 bottom-0"  style="z-index: 20; right:0;">Đăng ký</button>
+
+                    </div>
+                
+                </form>
+            
+            </div>
+        </div>
+    </div>
+</div>
 <footer class="footer-two">
     <!-- footer-top area start -->
     <div class="footer-top section-padding">
         <div class="footer-dsc">
             <div class="container">
                 <div class="row">
-                    <div class="col-xs-12 col-sm-6 col-md-3">
+                    <div class="col-xs-12 col-sm-6 col-md-4">
                         <div class="single-text">
                             <div class="footer-title">
                                 <h4>Về chúng tôi</h4>
@@ -28,7 +49,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-6 col-sm-3 col-md-3 wide-mobile">
+                    <!-- <div class="col-xs-6 col-sm-3 col-md-3 wide-mobile">
                         <div class="single-text">
                             <div class="footer-title">
                                 <h4>Tài khoản</h4>
@@ -42,32 +63,33 @@
                                 </ul>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-xs-6 col-sm-3 col-md-3 wide-mobile">
+                    </div> -->
+                    <div class="col-xs-6 col-sm-3 col-md-4 wide-mobile">
                         <div class="single-text">
                             <div class="footer-title">
-                                <h4>Danh mục</h4>
+                                <h4>Menu bếp của mẹ</h4>
                             </div>
                             <div class="footer-menu">
                                 <ul>
-                                    <?php foreach ($categories as $row) { ?>
-                                    <li><a class="footer-menu__link" href="?act=shop&sp=<?=$row['slug']?>"><i class="mdi mdi-menu-right"></i><?=$row['name']?></a></li>
+                                    <?php foreach ($data_collection as $row) { ?>
+                                    <li><a class="footer-menu__link" href="collection/<?=$row['slug']?>"><i class="mdi mdi-menu-right"></i><?=$row['name']?></a></li>
                                     <?php  } ?>
                                 </ul>
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-12 col-sm-12 col-md-3 r-margin-top wide-mobile">
+                    <div class="col-xs-12 col-sm-12 col-md-4 r-margin-top wide-mobile">
                         <div class="single-text">
                             <div class="footer-title">
                                 <h4>Mạng xã hội</h4>
                             </div>
                             <div class="clearfix instagram">
-                                <ul>
+                                <iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fbepcuame26%2F&tabs=timeline&width=340&height=331&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId" width="340" height="331" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
+                                <!-- <ul>
                                     <li><a href="#"><img src="public/img/footer/in1.png" alt="Instagram" /></a></li>
                                     <li><a href="#"><img src="public/img/footer/in2.png" alt="Instagram" /></a></li>
                                     <li><a href="#"><img src="public/img/footer/in3.png" alt="Instagram" /></a></li>
-                                </ul>
+                                </ul> -->
                             </div>
                         </div>
                     </div>
@@ -80,12 +102,10 @@
     <div class="footer-bottom">
         <div class="container">
             <div class="row">
-                <div class="col-xs-12 col-sm-6">
-                    <p>&copy; DTPPhone 2020. All Rights Reserved.</p>
+                <div class="col-xs-12 col-sm-12">
+                    <p class="text-center">&copy; Bếp của mẹ clone by Lam Tran.</p>
                 </div>
-                <div class="col-xs-12 col-sm-6 text-right">
-                    <a href="https://www.nganluong.vn/vn/home.html" target="_blank"><img src="public/img/footer/payment.png" alt="" /></a>
-                </div>
+               
             </div>
         </div>
     </div>

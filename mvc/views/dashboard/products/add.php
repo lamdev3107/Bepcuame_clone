@@ -21,24 +21,17 @@
         <form action="dashboard/product/add" method="POST" role="form" enctype="multipart/form-data">
         
             <div class="row">
-                <div class="form-group col-12 col-sm-12 col-md-6">
+                <div class="form-group col-12 ">
                     <label for="">Tên sản phẩm</label>
                     <input type="text" class="form-control" id="" placeholder="" required name="name">
                 </div>
-                <div class="form-group col-12 col-sm-12 col-md-6">
-                    <label for="">Số lượng</label>
-                    <input type="text" class="form-control" id="" placeholder="" required name="quantity" >
-                </div>
+          
             </div>
             
             <div class="row mb-4">
                 <div class="form-group col-12 col-sm-12 col-md-6">
-                    <label for="cars">Loại sản phẩm: </label>
-                    <select id="" required name="collection_id" class="form-control">
-                        <?php foreach ($data_collection as $row) { ?>
-                            <option value="<?= $row['id'] ?>"><?= $row['name'] ?></option>
-                        <?php } ?>
-                    </select>
+                    <label for="">Số lượng</label>
+                    <input type="text" class="form-control" id="" placeholder="" required name="stock" >
                 </div>
                 <div class="form-group col-12 col-sm-12 col-md-6">
                     <label for="">Đơn giá</label>
@@ -97,16 +90,54 @@
                     <?php } ?>
                 </select>
             </div>
-            <div class="form-group d-flex align-items-center">
-                <label class="mr-3" for="">Trạng thái</label>
-                <input type="checkbox" class="mr-2" id="" placeholder="" value="1" name="status">
-                <em>(Tích để cho phép hiện thị sản phẩm)</em>
-            </div>
+          
             <button type="submit" class="btn btn-primary float-right">Thêm mới</button>
         </form>
         <script>
             $(document).ready(function() {
-                $('#summernote').summernote();
+                $('#summernote').summernote({placeholder: 'Nhập nội dung mô tả....',
+                    tabsize: 2,
+                    height: 200,
+                    minHeight: 100,
+                    maxHeight: 300,
+                    focus: true,
+                    toolbar: [
+                        ['style', ['bold', 'italic', 'underline', 'clear']],
+                        ['font', ['strikethrough', 'superscript', 'subscript']],
+                        ['fontsize', ['fontsize']],
+                        ['color', ['color']],
+                        ['para', ['ul', 'ol', 'paragraph']],
+                        ['height', ['height']],
+                        ['table', ['table']],
+                        ['insert', ['link', 'picture', 'video']],
+                        ['view', ['fullscreen', 'codeview', 'help']],
+                    ],
+                    popover: {
+                        image: [
+                        ['image', ['resizeFull', 'resizeHalf', 'resizeQuarter', 'resizeNone']],
+                        ['float', ['floatLeft', 'floatRight', 'floatNone']],
+                        ['remove', ['removeMedia']]
+                        ],
+                        link: [
+                        ['link', ['linkDialogShow', 'unlink']]
+                        ],
+                        table: [
+                        ['add', ['addRowDown', 'addRowUp', 'addColLeft', 'addColRight']],
+                        ['delete', ['deleteRow', 'deleteCol', 'deleteTable']],
+                        ],
+                        air: [
+                        ['color', ['color']],
+                        ['font', ['bold', 'underline', 'clear']],
+                        ['para', ['ul', 'paragraph']],
+                        ['table', ['table']],
+                        ['insert', ['link', 'picture']]
+                        ]
+                    },
+                    codemirror: {
+                        theme: 'monokai'
+                    }
+                });
+                
             });
             function displayImg(input,_this, imageClass) {
               let imageBox = document.querySelector(imageClass)

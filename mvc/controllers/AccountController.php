@@ -20,24 +20,13 @@ class AccountController extends Controller{
             $user = $this->UserModel->login($username, $password);
          
             if ($user !== NULL) {
-                if($user['auth_id'] == 2){
-                    $_SESSION['isLogin_Admin'] = true;
+                if($user['auth_id'] == 2 || $user['auth_id'] ==3){
                     $_SESSION['user'] = $user;
                     $redirect = new redirect('dashboard/');
-
                     return;
-                }else if($user['auth_id'] == 3){
-                    $_SESSION['isLogin_Nhanvien'] = true;
-                    $_SESSION['user'] = $user;
-                    $redirect = new redirect('dashboard/');
-
-                    return;
-                }
-                else{
-                    $_SESSION['isLogin'] = true;
+                }else{
                     $_SESSION['user'] = $user;
                     $redirect = new redirect('/');
-
                     $this->view('client/masterlayout',[
                         'page'          => 'account/login',
                         'categories'     => $data_collection,
@@ -45,11 +34,9 @@ class AccountController extends Controller{
                     ]);
                     return;
                 }
-            // print_r($_SESSION);
             } else {
                 setcookie('noti-message', 'Tài khoản hoặc mật khẩu không chính xác', time() + 2);
                 setcookie('noti-type', 'error', time() + 2);
-
                 $redirect = new redirect('account/login');
             }
                         
@@ -101,42 +88,31 @@ class AccountController extends Controller{
                 $res = $this->UserModel->addUser( $data);
                 if ($res === true) {
                     $_SESSION['alert_type'] = "success";
-                    $_SESSION['alert_message'] ="Đăng ký tài khoản thành công thành công!";
+                    $_SESSION['alert_message'] ="Đăng ký tài khoản thành công thành công, Vui lòng đăng nhập lại!";
                     $_SESSION['alert_timer'] = true;
                     $redirect = new redirect('account/login');
                     return;
 
                 } else {
                     setcookie('noti-type', 'error', time() + 2);
-                    setcookie('noti-message', 'Đăng ký không thành công!', time() + 2);
+                    setcookie('noti-message', 'Đăng ký tài khoản  thất bại!', time() + 2);
                 }
             } 
             } else {
                 setcookie('noti-type', 'error', time() + 2);
                 setcookie('noti-message', 'Tài khoản đã tồn tại, Vui lòng nhập lại!', time() + 2);
-            }
-            // $redirect = new redirect('account/register');
-        $this->view('client/masterlayout',[
-        'page'          => 'account/register',
-        'data_collection'     => $data_collection,
+                $redirect = new redirect('account/register');
 
+            }
+        $this->view('client/masterlayout',[
+            'page'          => 'account/register',
+            'data_collection'     => $data_collection,
         ]);
     }
-    function logout()
-    {
-          if(isset($_SESSION['isLogin_Admin'])){
-            unset($_SESSION['isLogin_Admin']);
-            unset($_SESSION['user']);
-        }
-        if(isset($_SESSION['isLogin_Nhanvien'])){
-            unset($_SESSION['isLogin_Nhanvien']);
-            unset($_SESSION['user']);
-        }
-        if(isset($_SESSION['isLogin'])){
-            unset($_SESSION['isLogin']);
-            unset($_SESSION['user']);
-        }
+    function logout(){
+        unset($_SESSION['user']);
         $redirect = new redirect('home');
+        session_destroy();
 
     }
     function account()

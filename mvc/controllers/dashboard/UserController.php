@@ -57,18 +57,20 @@ class UserController extends Controller{
                     $_SESSION['alert_type'] = "success";
                     $_SESSION['alert_message'] ="Tạo mới tài khoản thành công!";
                     $_SESSION['alert_timer'] = true;
-                    setcookie('noti-message', 'Đăng ký thành công, Vui lòng đăng nhập lại!', time() + 2);
-                    setcookie('noti-type', 'success', time() + 2);
                     $redirect = new redirect('dashboard/user');
                     return;
 
                 } else {
                     setcookie('noti-type', 'error', time() + 2);
                     setcookie('noti-message', 'Tạo tài khoản không thành công!', time() + 2);
+                    $redirect = new redirect('dashboard/add');
+
                 }
             } else {
                 setcookie('noti-type', 'error', time() + 2);
                 setcookie('noti-message', 'Tài khoản đã tồn tại, Vui lòng nhập lại!', time() + 2);
+                $redirect = new redirect('dashboard/user/add');
+
             }
         }
 
