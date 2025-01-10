@@ -9,7 +9,7 @@ Website Bếp của mẹ clone sử dụng MVC PHP thuần được phát triể
 - Đặt hàng online, theo dõi lịch sử đặt hàng
 - Xem thông tin liên hệ của hàng
 
-**Chức năng của người quản **
+**Chức năng của người quản trị:**
 - Quản lý tài khoản người dùng: xem thông tin tài khoản người dùng, cập nhật vai trò
 - Quản lý hình ảnh banner (Thêm, sửa, xóa)
 - Quản lý danh mục sản phẩm (thêm, sửa, xóa)
