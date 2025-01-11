@@ -1,21 +1,21 @@
 
 <div class="tab-links px-2">
 	<span class="align-middle">Sắp xếp theo:</span>
-	<a href="dashboard/order" class="tab-link active" data-tab="tab-1"> Mới nhất</a>
-	<a href="dashboard/order/?status=processing" class="tab-link" data-tab="tab-2">Tên A->Z</a>
-	<a href="dashboard/order/?status=confirmed" class="tab-link" data-tab="tab-3">Tên Z->A</a>
-	<a href="dashboard/order/?status=shipped" class="tab-link" data-tab="tab-4">Giá tăng dần </a>
-	<a href="dashboard/order/?status=completed"  class="tab-link" data-tab="tab-5">Giá tăng dần </a> 
+	<p href="" class="tab-link active" data-tab="tab-1"> Mới nhất</p>
+	<p class="tab-link" data-tab="name-asc">Tên A->Z</p>
+	<p class="tab-link" data-tab="name-desc">Tên Z->A</p>
+	<p class="tab-link" data-tab="price-asc">Giá tăng dần </p>
+	<p  class="tab-link" data-tab="price-desc">Giá tăng dần </p> 
 
 	
 </div>
-<div class="row">
+<div class="row collection-products">
 	<?php 
 	if(isset($collection_products) and $collection_products != NULL){
 		foreach ($collection_products as  $row) {		
 	?>
-		<div class="col-xs-12 col-sm-6 col-md-3 r-margin-top">
-				<div class="single-product  ">
+		<div class="col-xs-12 col-sm-6 col-md-3 r-margin-top ">
+			<div class="single-product  ">
 				<a href="product/<?= $row['slug']?>" class="product-f">
 					<div style="padding-top: 100%" class="position-relative">
 						<img src="<?= $row['image1']?>" alt="Product Img" style="inset:0" class="position-absolute img-products h-100 w-100 object-fit-cover" />

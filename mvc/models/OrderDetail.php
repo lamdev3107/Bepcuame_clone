@@ -24,7 +24,7 @@ class OrderDetail extends BaseModel{
     }
      public function findOrderDetailById($id){
         $query = "select * from $this->table where id =$id";
-        return $this->returnData($this->_query($query));
+        return $this->returnOne($this->_query($query));
     }
     public function deleteOrderDetail($id){
         $res = $this->delete($this->table, ['id' => $id]);
@@ -48,17 +48,17 @@ class OrderDetail extends BaseModel{
  
     function getUncompletedOrderDetailscount(){
         $query = "SELECT count(id) as count FROM $this->table  WHERE status = 0 ";
-        $data = $this->returnData($this->_query($query));
+        $data = $this->returnOne($this->_query($query));
         return $data;
     }
     function getMonthlyRevenue($month){
-        $query = "SELECT SUM(total_price) as count FROM orderDetails WHERE MONTH(created_at) = $month And status = 1";
-        $data = $this->returnData($this->_query($query));
+        $query = "SELECT SUM(total_price) as count FROM orders WHERE MONTH(created_at) = $month And status = 'completed'";
+        $data = $this->returnOne($this->_query($query));
         return $data;
     }
     function getYearlyRevenue($year){
-        $query = "SELECT SUM(total_price) as count FROM orderDetails WHERE YEAR(created_at) = $year And status = 1";
-        $data = $this->returnData($this->_query($query));
+        $query = "SELECT SUM(total_price) as count FROM orders WHERE YEAR(created_at) = $year And status = 'completed'";
+        $data = $this->returnOne($this->_query($query));
         return $data;
     }
 }

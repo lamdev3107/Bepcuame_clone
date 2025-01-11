@@ -6,7 +6,7 @@ class Product extends BaseModel{
 
     function getProductDetails($id){
         $query = "select * from $this->table where id =$id";
-        return $this->returnData($this->_query($query));
+        return $this->returnOne($this->_query($query));
     }
      function getProductsLimit($a, $b){
         $data = array();
@@ -16,7 +16,7 @@ class Product extends BaseModel{
     }
     function getProductsCount(){
         $query = "SELECT count(id) as count FROM products";
-        $data = $this->returnData($this->_query($query));
+        $data = $this->returnOne($this->_query($query));
         return $data;
     }
     public function updateProduct($id, $dataArray){
@@ -34,11 +34,11 @@ class Product extends BaseModel{
     }
     public function findProductBySlug($slug){
         $query = "select * from $this->table where slug = '$slug'";
-        return $this->returnData($this->_query($query));
+        return $this->returnOne($this->_query($query));
     }
     public function findProductById($id){
         $query = "select * from $this->table where id =$id";
-        return $this->returnData($this->_query($query));
+        return $this->returnOne($this->_query($query));
     }
     public function deleteProduct($id){
         $res = $this->delete($this->table, ['id' => $id]);

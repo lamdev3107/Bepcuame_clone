@@ -7,7 +7,7 @@
             <div class="row">
                 <div class="col-xs-12">
                     <ul class="text-left">
-                        <li><a href="?act=home">Trang chủ</a></li>
+                        <li><a href="/">Trang chủ</a></li>
                         <li><span  class="mx-2"> / </span class="mx-2">Giỏ hàng (<?php if(isset($_SESSION['cart']) && $_SESSION !== NULL)	echo count($_SESSION['cart']);
 							else{
 						    echo "0";}
@@ -82,12 +82,7 @@
 							<?php } ?>
 						</div>
 						
-						<div  class="form-group">
-							<p class="mb-2 mt-5 fw-bold">Ghi chú đơn hàng</p>
-							<textarea name="note" id="" class="form-control">
-								
-							</textarea>
-						</div>
+						
 						
 					</div>
 					<div class="col col-md-4 pr-2 pl-1 border-start " >
@@ -104,7 +99,6 @@
 									?>
 								</label>
 								</label>
-								<p style="color: #bbb">(Đã bao gồm VAT nếu có)</p>
 							</div>
 						</div>
 						<button type="submit" onclick="goOrdering()" class="btn w-100 add-cart-product text-white fw-bold mt-4 px-5  " style="background-color:#fe5722; min-width: 33.333%" style="margin: 0">
@@ -170,7 +164,7 @@
              
             },
             error: function(err){
-                alert('Thêm vào gi�� hàng thất bại!', err);
+                alert('Thêm vào giỏ hàng thất bại!', err);
             }
 
         })

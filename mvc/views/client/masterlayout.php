@@ -36,8 +36,7 @@
     <link rel="stylesheet" href="public/css/jquery.simpleLens.css">
     <!-- jquery-ui.min css -->
     <link rel="stylesheet" href="public/css/jquery-ui.min.css">
-    <!-- meanmenu css -->
-    <link rel="stylesheet" href="public/css/meanmenu.min.css">
+   
     <!-- date picker css -->
     <link rel="stylesheet" href="public/css/jquery.datetimepicker.min.css">
 
@@ -59,12 +58,17 @@
     <!-- jquery latest version -->
     <script src="public/vendor/jquery/jquery.min.js"></script>
 
+    <!-- sweet-alert css -->
+     <link href="
+    https://cdn.jsdelivr.net/npm/sweetalert2@11.14.4/dist/sweetalert2.min.css
+    " rel="stylesheet">
+
 
    
 </head>
 
 <body>
-    
+     
     <!-- header section start -->
     <?php
    require_once './mvc/views/client/header_footer/header.php'
@@ -86,31 +90,11 @@
     <a target="_blank" href="https://www.facebook.com/messages/t/1607091752945435" class="position-fixed mess-logo" >
         <img src="public/img/about/messenger.png" alt="">
     </a>
-    <?php
-        if(isset($_SESSION['alert_message']) && $_SESSION['alert_message'] != ""){
-    ?>
-            <script>
-                Swal.fire({
-                icon: "<?php echo $_SESSION['alert_type']; ?>",
-                title: "<?php  echo $_SESSION['alert_message']; ?>",
-                showConfirmButton:  <?php echo isset($_SESSION['alert_timer']) && $_SESSION['alert_timer'] ? 'false' : 'true'; ?>,
-                timer: <?php if (isset($_SESSION['alert_timer']) && $_SESSION['alert_timer']) echo 2000;  ?>
-                });
-
-
-
-
-              
-            </script>
-       
-    <?php 
-        unset($_SESSION['alert_message']);
-        unset($_SESSION['alert_type']);
-    }?>
+   
 
     <!-- Messenger  -->
     <div class="box-chat position-fixed" >
-        <div class="box-chat__header d-flex align-items-center justify-content-between" style="">
+        <div class="box-chat__header d-flex align-items-center justify-content-between" >
             <div class="img"></div>
 
         </div>
@@ -123,10 +107,33 @@
         </div>
     </div>
     
+    
+    <!-- sweetalert2 -->
+    <script src="
+    https://cdn.jsdelivr.net/npm/sweetalert2@11.14.4/dist/sweetalert2.all.min.js
+    "></script>
+    <?php
+        if(isset($_SESSION['alert_message']) && $_SESSION['alert_message'] != ""){
+          print_r($_SESSION['alert_message']);
+      ?>
+          <script>
+              Swal.fire({
+              icon: "<?php echo $_SESSION['alert_type']; ?>",
+              title: "<?php  echo $_SESSION['alert_message']; ?>",
+              showConfirmButton:  <?php echo isset($_SESSION['alert_timer']) && $_SESSION['alert_timer'] ? 'false' : 'true'; ?>,
+              timer: <?php if (isset($_SESSION['alert_timer']) && $_SESSION['alert_timer']) echo 2000;  ?>
+              });
+              
+          </script>
+       
+      <?php 
+          unset($_SESSION['alert_message']);
+          unset($_SESSION['alert_type']);
+      }?>
 
    
     <!-- modernizr js -->
-    <script src="/public/js/modernizr-2.8.3.min.js"></script>
+    <!-- <script src="/public/js/modernizr-2.8.3.min.js"></script> -->
     <!-- bootstrap js -->
     <script src="public/js/bootstrap.min.js"></script>
     
@@ -140,8 +147,6 @@
     <script src="public/js/jquery.simpleLens.min.js"></script>
     <!-- jquery-ui js -->
     <script src="public/js/jquery-ui.min.js"></script>
-    <!-- load-more js -->
-    <script src="public/js/load-more.js"></script>
     <!-- plugins js -->
     <script src="public/js/plugins.js"></script>
     <!-- main js -->
@@ -150,179 +155,162 @@
     <script src="public/vendor/jquery.datetimepicker.full.min.js"></script>
 
 
-    <!-- sweetalert2 -->
-      <!-- sweet-alert css -->
-     <link href="
-    https://cdn.jsdelivr.net/npm/sweetalert2@11.14.4/dist/sweetalert2.min.css
-    " rel="stylesheet">
-    <script src="
-    https://cdn.jsdelivr.net/npm/sweetalert2@11.14.4/dist/sweetalert2.all.min.js
-    "></script>
+
+   
+  
 
     <script>
-        // ------------------- Cart Flow ----------------------------
-    function plusCart(product){
-        let count = parseInt($(`.count-cart-${product.id}`).val());
-        ++count;
-        $(`.count-cart-${product.id}`).val(count);
-        $.ajax({
-            url: "cart/update",
-            method: "POST",
-            dataType: 'json',  // Yêu cầu dữ liệu trả về dưới dạng JSON
-            data: {
-                id: product.id, 
-                name: product.name, 
-                slug: product.slug, 
-                price: product.price,
-                image1: product.image1, 
-                quantity: 1
-            },
-            success: function(res){
-                let cartHTML = renderCartHTML(res.data);
-                $('.header-cart').html(() => {
-                    
-                    return cartHTML;
 
-                });
-             
-            },
-            error: function(err){
-                alert('Thêm vào gi�� hàng thất bại!', err);
-            }
 
-        })
-    }   
-    function minusCart(product){
-        let count = parseInt($(`.count-cart-${product.id}`).val());
-        --count;
-        if(count == 0){
-            deleteProduct(product.id)
-            return;
+    
+    
+        function formatCurrency(number) {
+            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
-        $(`.count-cart-${product.id}`).val(count);
+            // ------------------- Cart Flow ----------------------------
+        function plusCart(product){
+            let count = parseInt($(`.count-cart-${product.id}`).val());
+            ++count;
+            $(`.count-cart-${product.id}`).val(count);
+            $.ajax({
+                url: "cart/update",
+                method: "POST",
+                dataType: 'json',  // Yêu cầu dữ liệu trả về dưới dạng JSON
+                data: {
+                    id: product.id, 
+                    name: product.name, 
+                    slug: product.slug, 
+                    price: product.price,
+                    image1: product.image1, 
+                    quantity: 1
+                },
+                success: function(res){
+                    let cartHTML = renderCartHTML(res.data);
+                    $('.header-cart').html(() => {
+                        
+                        return cartHTML;
 
-        $.ajax({
-            url: "cart/update",
-            method: "POST",
-            dataType: 'json',  // Yêu cầu dữ liệu trả về dưới dạng JSON
-            data: {
-                id: product.id, 
-                name: product.name, 
-                slug: product.slug, 
-                price: product.price,
-                image1: product.image1, 
-                quantity: -1
-            },
-            success: function(res){
-                let cartHTML = renderCartHTML(res.data);
-                $('.header-cart').html(() => {
-                    return cartHTML;
-                });
+                    });
                 
-            },
-            error: function(err){
-                $('.cart-action-btn[productId='+product.id+']').html(()=>{
-                return `<button productId="' . $row['id'] . '"  onclick="addToCart({
-                        'name': '${product.name}',
-                        'slug': '${product.slug}',
-                        'id': ${product.id},
-                        'price': ${product.price},
-                        'image1': '${product.image1}'
-                    })" class="add-cart-btn p-2">
-                        Chọn mua
-                    </button>`;
-                })
+                },
+                error: function(err){
+                    alert('Thêm vào giỏ hàng thất bại!', err);
+                }
+
+            })
+        }   
+        function minusCart(product){
+            let count = parseInt($(`.count-cart-${product.id}`).val());
+            --count;
+            if(count == 0){
+                console.log("count = 0", count)
+                deleteProduct(product.id)
+                return;
             }
+            $(`.count-cart-${product.id}`).val(count) 
+            $.ajax({
+                url: "cart/update",
+                method: "POST",
+                dataType: 'json',  // Yêu cầu dữ liệu trả về dưới dạng JSON
+                data: {
+                    id: product.id, 
+                    name: product.name, 
+                    slug: product.slug, 
+                    price: product.price,
+                    image1: product.image1, 
+                    quantity: -1
+                },
+                success: function(res){
+                    let cartHTML = renderCartHTML(res.data);
+                    $('.header-cart').html(() => {
+                        return cartHTML;
+                    });
+                    
+                },
+                error: function(err){
+                    alert('Giảm số lượng sp khỏi giỏ hàng thất bại!', err);
+                }
 
-        })
-    }                             
-    function deleteProduct(id) {
-          $.ajax({
-            url: "cart/deleteProduct",
-            method: "POST",
-            dataType: 'json',  // Yêu cầu dữ liệu trả về dưới dạng JSON
-            data: {
-                id: parseInt(id), 
-            },
-			
-            success: function(res){
-                let products = res.data;
-				let cartHTML = "";
-				let cartHeaderHTML = renderCartHTML(res.data);
+            })
+        }                             
+        function deleteProduct(id) {
+            $.ajax({
+                url: "cart/deleteProduct",
+                method: "POST",
+                dataType: 'json',  // Yêu cầu dữ liệu trả về dưới dạng JSON
+                data: {
+                    id: parseInt(id), 
+                },
                 
-                $('.header-cart').html(() => {
-                    return cartHeaderHTML;
-                });
-				let product = res.returnData;
+                success: function(res){
+                    let products = res.data;
+                    let cartHTML = "";
+                    let cartHeaderHTML = renderCartHTML(res.data);
+                    
+                    $('.header-cart').html(() => {
+                        return cartHeaderHTML;
+                    });
+                    let product = res.returnData;
+                
+                    products.map((item) => {
+                        let thanhtien = parseInt(item.price) * parseInt(item.quantity);
+                        thanhtien = Math.floor(thanhtien).format(0);
+    
+                        cartHTML += `
+                            <div class="cart-item position-relative mb-3">
+                                <div class="d-flex align-items-center gap-2">
+                                    <a style="width: 6%" href="javascript:void(0)" class="btn btn-delete"
+                                        onclick="deleteProduct(${item.id})">
+                                        <i class="fa-solid fa-xmark d-block"></i>
+                                        
+                                    </a>
+                                    <a class="" style="width: 100px; height: 100px" href="product/${item.slug}">
+                                        <img src="${item.image1}" alt="" class="object-fit-cover w-100 h-100" />
+                                    </a>
+                                
+                                    <div class=" me-3 text-start" style="flex: 1">
+                                        <a href="product/${item.slug}" class="d-block text-start mb-1" style="font-size: 16px; font-weight: 500">
+                                            ${item.name}
+                                        </a>
+                                        
+                                    </div>
+                                    <div class="text-start">
+                                        <span class="text-danger fw-bold me-2" style="font-size: 16px">${thanhtien}đ</span>
 
-			
-				products.map((item) => {
-					let thanhtien = parseInt(item.price) * parseInt(item.quantity);
-        			thanhtien = Math.floor(thanhtien).format(0);
-  
-					cartHTML += `
-						<div class="cart-item position-relative mb-3">
-							<div class="d-flex align-items-center gap-2">
-								<a style="width: 6%" href="javascript:void(0)" class="btn btn-delete"
-									onclick="deleteProduct(${item.id})">
-									<i class="fa-solid fa-xmark d-block"></i>
-									
-								</a>
-								<a class="" style="width: 100px; height: 100px" href="product/${item.slug}">
-									<img src="${item.image1}" alt="" class="object-fit-cover w-100 h-100" />
-								</a>
-							
-								<div class=" me-3 text-start" style="flex: 1">
-									<a href="product/${item.slug}" class="d-block text-start mb-1" style="font-size: 16px; font-weight: 500">
-										${item.name}
-									</a>
-									
-								</div>
-								<div class="text-start">
-									<span class="text-danger fw-bold me-2" style="font-size: 16px">${thanhtien}đ</span>
-
-								</div>
-								<div class="cart-action-btn" productId="${item.id}">
-									<div class="update-cart-btn  d-flex align-items-center justify-content-between " style="min-width: 100px; margin: 0;">
-										<button onclick="minusCartPage({
-											'name': '${item.name}',
-											'slug': '${item.slug}',
-											'id': ${item.id},
-											'price': ${item.price},
-											'image1': '${item.image1}'
-										})" class="minus-cart" style="width: 15%" style="background-color: transparent;">
-											<i class="fa-solid fa-minus d-block w-100" style="font-size: 16px"></i>
-										</button>
-										
-										<input disabled type="text"  class="count-cart-${item.id} form-control text-center"  min="1" value="${item.quantity}" style="width: 60px; text-align: center; user-select: none ; color: #008848; border:none "/>
-										
-										<button onclick="plusCartPage({
-											'name': '${item.name}',
-											'slug': '${item.slug}',
-											'id': ${item.id},
-											'price': ${item.price},
-											'image1': '${item.image1}'
-										})" class="plus-cart"  style="width: 15%" style="background-color: transparent;">
-											<i class="fa-solid fa-plus d-block w-100" style="font-size: 16px"></i>
-										</button>
-									</div>
-								</div>
-							</div>
-							
-						</div>
-						
-					`
-				})
-				if(res.data.length === 0){
-                	
-					$('.cart-wrapper').html(
-						() => {
-							return `<p class="px-2" style="font-size: 18px">Bạn hiện chưa có sản phẩm nào trong giỏ hàng. Nhấn vào<a class="text-decoration-underline" style="color: #008848" href="collection/all">đây</a> để tiếp tục mua sắm
-							</p>`
-						}
-					)
-                    $('.cart-action-btn[productId='+product.id+']').html(()=>{
-                        return `<button productId="' . $row['id'] . '"  onclick="addToCart({
+                                    </div>
+                                    <div class="cart-action-btn" productId="${item.id}">
+                                        <div class="update-cart-btn  d-flex align-items-center justify-content-between " style="min-width: 100px; margin: 0;">
+                                            <button onclick="minusCartPage({
+                                                'name': '${item.name}',
+                                                'slug': '${item.slug}',
+                                                'id': ${item.id},
+                                                'price': ${item.price},
+                                                'image1': '${item.image1}'
+                                            })" class="minus-cart" style="width: 15%" style="background-color: transparent;">
+                                                <i class="fa-solid fa-minus d-block w-100" style="font-size: 16px"></i>
+                                            </button>
+                                            
+                                            <input disabled type="text"  class="count-cart-${item.id} form-control text-center"  min="1" value="${item.quantity}" style="width: 60px; text-align: center; user-select: none ; color: #008848; border:none "/>
+                                            
+                                            <button onclick="plusCartPage({
+                                                'name': '${item.name}',
+                                                'slug': '${item.slug}',
+                                                'id': ${item.id},
+                                                'price': ${item.price},
+                                                'image1': '${item.image1}'
+                                            })" class="plus-cart"  style="width: 15%" style="background-color: transparent;">
+                                                <i class="fa-solid fa-plus d-block w-100" style="font-size: 16px"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            
+                        `
+                    })
+                    $('.cart-action-btn[productId='+product.id+']').html(
+                        `<button productId="${product.id}"  onclick="addToCart({
                                 'name': '${product.name}',
                                 'slug': '${product.slug}',
                                 'id': ${product.id},
@@ -330,324 +318,493 @@
                                 'image1': '${product.image1}'
                             })" class="add-cart-btn p-2">
                                 Chọn mua
+                            </button>`)
+                    if(res.data.length === 0){
+                        
+                        $('.cart-wrapper').html(
+                            () => {
+                                return `<p class="px-2" style="font-size: 18px">Bạn hiện chưa có sản phẩm nào trong giỏ hàng. Nhấn vào<a class="text-decoration-underline" style="color: #008848" href="collection/all">đây</a> để tiếp tục mua sắm
+                                </p>`
+                            }
+                        )
+                        
+                        return;
+                    }
+                    $('.cart-list').html(()=>{
+                        return `${cartHTML}`;
+                    })
+                    
+                    $(`.total-order-price`).html(() => {
+                        let thanhtien = 0;
+                        for(let item of res.data){
+                            thanhtien += parseInt(item.quantity) * parseInt(item.price);
+                        }
+                        thanhtien = Math.floor(thanhtien).format(0);
+
+                        return `${thanhtien}đ`
+                    })
+                    
+                },
+                error: function(err){
+                    alert('Xóa khỏi giỏ hàng hàng thất bại!', err);
+                    $('.cart-action-btn[productId='+product.id+']').html(()=>{
+                        return `<button productId="${product.id}"  onclick="addToCart({
+                                'name': '${product.name}',
+                                'slug': '${product.slug}',
+                                'id': ${product.id},
+                                'price': ${product.price},
+                                'image1': '${product.image1}'
+                            })" class="class="add-cart-btn p-2">
+                                Chọn mua
                             </button>`;
                     })
-					return;
-				}
-                // $('.cart-list').html(()=>{
-                // 	return `${cartHTML}`;
-                // })
-				
-				$(`.total-order-price`).html(() => {
-					let thanhtien = 0;
-					for(let item of res.data){
-                        thanhtien += parseInt(item.quantity) * parseInt(item.price);
-                    }
-					thanhtien = Math.floor(thanhtien).format(0);
+                }
 
-                    return `${thanhtien}đ`
-				})
-				
-            },
-            error: function(err){
-                alert('Thêm vào gi�� hàng thất bại!', err);
-            }
-
-        })
-    }
+            })
+        }
 
 
-    function addToCart(product){
-        $.ajax({
-            url: "cart/update",
-            method: "POST",
-            dataType: 'json',  // Yêu cầu dữ liệu trả về dưới dạng JSON
-            data: {
-                id: product.id, 
-                name: product.name, 
-                slug: product.slug, 
-                price: product.price,
-                image1: product.image1, 
-                quantity: 1
-            },
-            success: function(res){
-                Swal.fire({
-                    // icon: "success",
-                    text: "Thêm sản phẩm vào giỏ hàng thành công!",
-                    imageUrl: res.returnData.image1,
-                    imageWidth: 300,
-                    // imageHeight: 200,
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-                $('.cart-action-btn[productId='+res.returnData.id+']').html(()=>{
-                    return `<div class="update-cart-btn d-flex align-items-center justify-content-stretch">
-                    
-                            <button onclick="minusCart({
-                                'name': '${res.returnData.name}',
-                                'slug': '${res.returnData.slug}',
-                                'id': ${res.returnData.id},
-                                'price': ${res.returnData.price},
-                                'image1': '${res.returnData.image1}'
-                            })" class="minus-cart" style="width: 15%; background-color: transparent;">
-                            <i class="fa-solid fa-minus"></i>
-                            </button>
-                
-                            <input disabled type="text" class="count-cart count-cart-${res.returnData.id} form-control text-center" min="1" value="${res.returnData.quantity}" style="width: 30px; text-align: center; user-select: none " />
-                
-                            <button onclick="plusCart({
-                                'name': '${res.returnData.name}',
-                                'slug': '${res.returnData.slug}',
-                                'id': ${res.returnData.id},
-                                'price': ${res.returnData.price},
-                                'image1': '${res.returnData.image1}'
-                            })" class="plus-cart"  style="width: 15%; background-color: transparent;">
-                            <i class="fa-solid fa-plus"></i>
-                            </button>
-                
-                        </div>`
+        function addToCart(product){
+            $.ajax({
+                url: "cart/update",
+                method: "POST",
+                dataType: 'json',  // Yêu cầu dữ liệu trả về dưới dạng JSON
+                data: {
+                    id: product.id, 
+                    name: product.name, 
+                    slug: product.slug, 
+                    price: product.price,
+                    image1: product.image1, 
+                    quantity: 1
+                },
+                success: function(res){
+                    Swal.fire({
+                        // icon: "success",
+                        text: "Thêm sản phẩm vào giỏ hàng thành công!",
+                        imageUrl: res.returnData.image1,
+                        imageWidth: 300,
+                        // imageHeight: 200,
+                        showConfirmButton: false,
+                        timer: 1500
                     });
-                let cartHTML = renderCartHTML(res.data);
-                $('.header-cart').html(() => {
+                    $('.cart-action-btn[productId='+res.returnData.id+']').html(()=>{
+                        return `<div class="update-cart-btn d-flex align-items-center justify-content-stretch">
+                        
+                                <button onclick="minusCart({
+                                    'name': '${res.returnData.name}',
+                                    'slug': '${res.returnData.slug}',
+                                    'id': ${res.returnData.id},
+                                    'price': ${res.returnData.price},
+                                    'image1': '${res.returnData.image1}'
+                                })" class="minus-cart" style="width: 15%; background-color: transparent;">
+                                <i class="fa-solid fa-minus"></i>
+                                </button>
                     
-                    return cartHTML;
+                                <input disabled type="text" class="count-cart count-cart-${res.returnData.id} form-control text-center" min="1" value="${res.returnData.quantity}" style="width: 30px; text-align: center; user-select: none " />
+                    
+                                <button onclick="plusCart({
+                                    'name': '${res.returnData.name}',
+                                    'slug': '${res.returnData.slug}',
+                                    'id': ${res.returnData.id},
+                                    'price': ${res.returnData.price},
+                                    'image1': '${res.returnData.image1}'
+                                })" class="plus-cart"  style="width: 15%; background-color: transparent;">
+                                <i class="fa-solid fa-plus"></i>
+                                </button>
+                    
+                            </div>`
+                        });
+                    let cartHTML = renderCartHTML(res.data);
+                    $('.header-cart').html(() => {
+                        
+                        return cartHTML;
 
-                });
-                   
+                    });
+                    
 
-            },
-            error: function(err){
-                alert('Thêm vào giỏ hàng thất bại!', err);
-            }
+                },
+                error: function(err){
+                    alert('Thêm vào giỏ hàng thất bại!', err);
+                }
 
-        })
-    }
+            })
+        }
 
 
-    function renderCartHTML(cartArray){
-        let soluong = cartArray.length
-        let thanhtien = cartArray.reduce((sum, item) => {
-            return sum+= parseInt(item.quantity) * parseInt(item.price)
-        }, 0)
-        thanhtien = Math.floor(thanhtien).format(0);
-        let cartList =  ""
-        cartArray.map((item) => {
-            cartList += `
-                <div class="cart-item position-relative mb-3">
-                <div class="d-flex align-items-start gap-2">
-                    <a class="" style="width: 70px; height: 70px" href="product/${item.slug}">
-                        <img src="${item.image1}" alt="" class="object-fit-cover w-100 h-100" />
-                    </a>
-                
-                    <div class=" me-3 text-start" style="flex: 1">
-                        <a href="product/${item.slug}" class="d-block text-start mb-1" style="font-size: 14px; font-weight: 500">
-                            ${item.name}
+        function renderCartHTML(cartArray){
+            let soluong = cartArray.length
+            let thanhtien = cartArray.reduce((sum, item) => {
+                return sum+= parseInt(item.quantity) * parseInt(item.price)
+            }, 0)
+            thanhtien = Math.floor(thanhtien).format(0);
+            let cartList =  ""
+            cartArray.map((item) => {
+                cartList += `
+                    <div class="cart-item position-relative mb-3">
+                    <div class="d-flex align-items-start gap-2">
+                        <a class="" style="width: 70px; height: 70px" href="product/${item.slug}">
+                            <img src="${item.image1}" alt="" class="object-fit-cover w-100 h-100" />
                         </a>
-                        <div class="text-start">
-                            <span class="text-danger fw-bold" style="font-size: 14px">
-                                ${Math.floor(item.price).format(0)}đ</span>
-                            <span class="">x</span>
-                            <span>${item.quantity}</span>
+                    
+                        <div class=" me-3 text-start" style="flex: 1">
+                            <a href="product/${item.slug}" class="d-block text-start mb-1" style="font-size: 14px; font-weight: 500">
+                                ${item.name}
+                            </a>
+                            <div class="text-start">
+                                <span class="text-danger fw-bold" style="font-size: 14px">
+                                    ${Math.floor(item.price).format(0)}đ</span>
+                                <span class="">x</span>
+                                <span>${item.quantity}</span>
+
+                            </div>
+                        </div>
+
+                        <a class="" href="javascript:void(0)" class="btn btn-delete"
+                            onclick="deleteProduct(${item.id})">
+                            <i class="fa-solid fa-xmark"></i>
+                        </a>
+                    </div>
+                    
+                </div>
+                `
+            })
+            let cartDropdown = `<p>Giỏ hàng chưa có sản phẩm nào</p>`
+            if(cartArray.length > 0){
+                cartDropdown = ` 
+                        <div class="cart-header-list overflow-auto px-3" style="max-height: 350px">
+                            ${cartList}
+                        </div>
+                        <div class="text-start py-3 border-top mx-3">
+                            <span>Tổng tiền tạm tính: <span class="text-danger fw-bold"> ${thanhtien}đ</span>
 
                         </div>
-                    </div>
-
-                    <a class="" href="javascript:void(0)" class="btn btn-delete"
-                        onclick="deleteProduct(${item.id})">
-                        <i class="fa-solid fa-xmark"></i>
+                        <a class=" d-block  p-2 rounded go-checkout-btn mx-3"  href="cart">Tiến hành đặt hàng</a>
+                    `
+            }
+            let returnHTML = `
+                    <a  href="cart" class="cart d-flex align-items-center gap-2  " style="color:#008848">
+                        <i class="mdi mdi-cart" style="font-size: 20px"></i>
+                        <span style="text-wrap:nowrap">Giỏ hàng</span>
+                        <span style="padding: 1px 6px;background-color:#fbc011;color: black;border-radius: 4px; font-size: 14px"  class="quantity">
+                            ${soluong}
+                        </span>  
                     </a>
-                </div>
-                
-            </div>
-            `
-        })
-        let cartDropdown = `<p>Giỏ hàng chưa có sản phẩm nào</p>`
-        if(cartArray.length > 0){
-            cartDropdown = ` 
-                    <div class="cart-header-list overflow-auto px-3" style="max-height: 350px">
-                        ${cartList}
+                    <div class="cartdrop" style="cursor: default;">
+                        ${cartDropdown}
                     </div>
-                    <div class="text-start py-3 border-top mx-3">
-                        <span>Tổng tiền tạm tính: <span class="text-danger fw-bold"> ${thanhtien}đ</span>
-
-                    </div>
-                    <a class=" d-block  p-2 rounded go-checkout-btn mx-3"  href="cart">Tiến hành thanh toán</a>
                 `
+            return returnHTML;
         }
-        let returnHTML = `
-                <a  href="cart" class="cart d-flex align-items-center gap-2  " style="color:#008848">
-                    <i class="mdi mdi-cart" style="font-size: 20px"></i>
-                    <span style="text-wrap:nowrap">Giỏ hàng</span>
-                    <span style="padding: 1px 6px;background-color:#fbc011;color: black;border-radius: 4px; font-size: 14px"  class="quantity">
-                        ${soluong}
-                    </span>  
-                </a>
-                <div class="cartdrop" style="cursor: default;">
-                    ${cartDropdown}
-                </div>
-            `
-        return returnHTML;
-    }
-  
-    function formatMoney(__this) {
-        let val = __this;
-        // let num = val.replace(/[^\d]/g,"");
-        let arr = val.split('.');
-        let val_num = arr[0];
-        let len = val_num.length;
-        let result = '';
-        let j = 0;
-        for (let index = len; index > 0; index--) {
-            j++;
-            if (j % 3 == 1 && j != 1) {
-                result = val_num.substr(index - 1, 1) + ',' + result;
-            } else {
-                result = val_num.substr(index - 1, 1) + result;
-            }
-        }
-        return result
-    }
-    Number.prototype.format = function(n, x) {
-        let re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\.' : '$') + ')';
-        return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$&,');
-    }
-
-
-    $(document).ready(function() {
-        $('.picker').datetimepicker({
-            autoclose: true,
-            timepicker:false,
-            datepicker:true,
-            format:"d/m/Y",
-            weeks: true
-        })
-        $.datetimepicker.setLocale('vi')
-    })
-
-
-      //Carosel/Slider management
-    $(document).ready(function() {
-        //----------Carousel ------------//
-        function checkNavigation(event, prevBtn, nextBtn) {
-            let items = event.item.count;        // Tổng số item
-            let item = event.item.index;         // Vị trí hiện tại
-            // Ẩn/Hiện nút Prev
-            if (item === 0) {
-                prevBtn.addClass("hidden");
-            } else {
-                prevBtn.removeClass("hidden");
-            }
-            // Ẩn/Hiện nút Next
-            if (item === items - 1) {
-                nextBtn.addClass("hidden");
-            } else {
-                nextBtn.removeClass("hidden");
-            }
-        }
-        function controlCarousel(sliderObj, prevBtn, nextBtn) {
-              // Nút Prev và Next hoạt động
-            prevBtn.click(function() {
-                sliderObj.trigger("prev.owl.carousel");
-            });
-            nextBtn.click(function() {
-                sliderObj.trigger("next.owl.carousel");
-            });
-        }
-        let popular_slider  =  $('.popular-carousel').owlCarousel({
-            loop: false,
-            margin: 28,
-            nav: false,
-            navRewind: true, 
-            lazyLoad: true,
-            navText: [
-                "<i class='fa fa-caret-left'></i>",
-                "<i class='fa fa-caret-right'></i>"
-            ],
-            autoplayHoverPause: true,
-            onInitialized: (e) => checkNavigation(e, $(".custom-nav .prevBtn"), $(".custom-nav .nextBtn")),
-            onChanged: (e) => checkNavigation(e, $(".custom-nav .prevBtn"), $(".custom-nav .nextBtn")),
-            responsive: {
-                0: {
-                items: 1,
-                slideBy:1
-                },
-                600: {
-                items: 3,
-                slideBy: 3
-                },
-                1000: {
-                items: 4,
-                slideBy: 4,
+    
+        function formatMoney(__this) {
+            let val = __this;
+            // let num = val.replace(/[^\d]/g,"");
+            let arr = val.split('.');
+            let val_num = arr[0];
+            let len = val_num.length;
+            let result = '';
+            let j = 0;
+            for (let index = len; index > 0; index--) {
+                j++;
+                if (j % 3 == 1 && j != 1) {
+                    result = val_num.substr(index - 1, 1) + ',' + result;
+                } else {
+                    result = val_num.substr(index - 1, 1) + result;
                 }
             }
-        })
-      
-        // ---- NEM SLIDER --------//
-        let nem_slider =  $('.nem-carousel').owlCarousel({
-            loop: false,
-            margin: 20,
-            nav: false,
-            navRewind: true, 
-            lazyLoad: true,
-            navText: [
-                "<i class='fa fa-caret-left'></i>",
-                "<i class='fa fa-caret-right'></i>"
-            ],
-            autoplayHoverPause: true,
-            onInitialized: (e) => checkNavigation(e, $('.nem-prev'), $(".nem-next")),
-            onChanged: (e) => checkNavigation(e, $('.nem-prev'), $(".nem-next")),
-            responsive: {
-                0: {
-                items: 1,
-                slideBy:1
-                },
-                600: {
-                items: 2,
-                slideBy: 2
-                },
-                1000: {
-                items: 3,
-                slideBy: 3,
-                }
-            }
-        })
-         // ------ BÁNH NGỌT -------//
-        let doanvat_slider =  $('.doanvat-carousel').owlCarousel({
-            loop: false,
-            margin: 20,
-            nav: false,
-            navRewind: true, 
-            lazyLoad: true,
-            navText: [
-                "<i class='fa fa-caret-left'></i>",
-                "<i class='fa fa-caret-right'></i>"
-            ],
-            autoplayHoverPause: true,
-            onInitialized: (e) => checkNavigation(e, $('.doanvat-prev'), $(".doanvat-next")),
-            onChanged: (e) => checkNavigation(e, $('.doanvat-prev'), $(".doanvat-next")),
-            responsive: {
-                0: {
-                items: 1,
-                slideBy:1
-                },
-                600: {
-                items: 2,
-                slideBy: 2
-                },
-                1000: {
-                items: 4,
-                slideBy: 4,
-                }
-            }
-        })
-        controlCarousel(popular_slider,$(".prevBtn"), $(".nextBtn"));
-        controlCarousel(nem_slider, $(".nem-prev"), $(".nem-next"));
-        controlCarousel(doanvat_slider, $(".doanvat-prev"), $(".doanvat-next"));
+            return result
+        }
+        Number.prototype.format = function(n, x) {
+            let re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\.' : '$') + ')';
+            return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$&,');
+        }
 
 
+        $(document).ready(function() {
+            $('.picker').datetimepicker({
+                autoclose: true,
+                timepicker:false,
+                datepicker:true,
+                format:"d/m/Y",
+                weeks: true
+            })
+            $.datetimepicker.setLocale('vi')
+        })
+
+
+        //Carosel/Slider management
+        $(document).ready(function() {
+            //----------Carousel ------------//
+            function checkNavigation(event, prevBtn, nextBtn) {
+                let items = event.item.count;        // Tổng số item
+                let item = event.item.index;         // Vị trí hiện tại
+                // Ẩn/Hiện nút Prev
+                if (item === 0) {
+                    prevBtn.addClass("hidden");
+                } else {
+                    prevBtn.removeClass("hidden");
+                }
+                // Ẩn/Hiện nút Next
+                if (item === items - 1) {
+                    nextBtn.addClass("hidden");
+                } else {
+                    nextBtn.removeClass("hidden");
+                }
+            }
+            function controlCarousel(sliderObj, prevBtn, nextBtn) {
+                // Nút Prev và Next hoạt động
+                prevBtn.click(function() {
+                    sliderObj.trigger("prev.owl.carousel");
+                });
+                nextBtn.click(function() {
+                    sliderObj.trigger("next.owl.carousel");
+                });
+            }
+            let popular_slider  =  $('.popular-carousel').owlCarousel({
+                loop: false,
+                margin: 28,
+                nav: false,
+                navRewind: true, 
+                lazyLoad: true,
+                navText: [
+                    "<i class='fa fa-caret-left'></i>",
+                    "<i class='fa fa-caret-right'></i>"
+                ],
+                autoplayHoverPause: true,
+                onInitialized: (e) => checkNavigation(e, $(".custom-nav .prevBtn"), $(".custom-nav .nextBtn")),
+                onChanged: (e) => checkNavigation(e, $(".custom-nav .prevBtn"), $(".custom-nav .nextBtn")),
+                responsive: {
+                    0: {
+                    items: 1,
+                    slideBy:1
+                    },
+                    600: {
+                    items: 3,
+                    slideBy: 3
+                    },
+                    1000: {
+                    items: 4,
+                    slideBy: 4,
+                    }
+                }
+            })
         
+            // ---- NEM SLIDER --------//
+            let nem_slider =  $('.nem-carousel').owlCarousel({
+                loop: false,
+                margin: 20,
+                nav: false,
+                navRewind: true, 
+                lazyLoad: true,
+                navText: [
+                    "<i class='fa fa-caret-left'></i>",
+                    "<i class='fa fa-caret-right'></i>"
+                ],
+                autoplayHoverPause: true,
+                onInitialized: (e) => checkNavigation(e, $('.nem-prev'), $(".nem-next")),
+                onChanged: (e) => checkNavigation(e, $('.nem-prev'), $(".nem-next")),
+                responsive: {
+                    0: {
+                    items: 1,
+                    slideBy:1
+                    },
+                    600: {
+                    items: 2,
+                    slideBy: 2
+                    },
+                    1000: {
+                    items: 3,
+                    slideBy: 3,
+                    }
+                }
+            })
+            // ------ BÁNH NGỌT -------//
+            let doanvat_slider =  $('.doanvat-carousel').owlCarousel({
+                loop: false,
+                margin: 20,
+                nav: false,
+                navRewind: true, 
+                lazyLoad: true,
+                navText: [
+                    "<i class='fa fa-caret-left'></i>",
+                    "<i class='fa fa-caret-right'></i>"
+                ],
+                autoplayHoverPause: true,
+                onInitialized: (e) => checkNavigation(e, $('.doanvat-prev'), $(".doanvat-next")),
+                onChanged: (e) => checkNavigation(e, $('.doanvat-prev'), $(".doanvat-next")),
+                responsive: {
+                    0: {
+                    items: 1,
+                    slideBy:1
+                    },
+                    600: {
+                    items: 2,
+                    slideBy: 2
+                    },
+                    1000: {
+                    items: 4,
+                    slideBy: 4,
+                    }
+                }
+            })
+            controlCarousel(popular_slider,$(".prevBtn"), $(".nextBtn"));
+            controlCarousel(nem_slider, $(".nem-prev"), $(".nem-next"));
+            controlCarousel(doanvat_slider, $(".doanvat-prev"), $(".doanvat-next"));
+
+
+
+            
+        });
+
+    
+    </script>
+
+    <script>
+        // ------------- Collection tabs ----------------------------//
+    // Hàm kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
+    function getCartSessionArray(){
+        let cartArray = [];
+        let cart = <?php if( isset($_SESSION['cart']))  echo json_encode($_SESSION['cart']);
+            else echo json_encode([]);
+        ?>;
+        for (const [key, value] of Object.entries(cart)) {
+            cartArray.push(value);
+        }
+        return cartArray;
+    }
+    function isInCart(productId) {
+        let cartArray = getCartSessionArray();
        
-    });
+        return cartArray.some(item => parseInt(item.id) === parseInt(productId));
+    }
+    // Hàm tạo nút thêm vào giỏ hàng
+    function createAddToCartButton(product) {
+        return `
+            <button productId="${product.id}" onclick="addToCart({
+                                'name': '${product.name}',
+                                'slug': '${product.slug}',
+                                'id': ${product.id},
+                                'price': ${product.price},
+                                'image1': '${product.image1}'
+                            })" class="add-cart-btn p-2">
+                Chọn mua
+            </button>
+        `;
+    }
+    // Hàm tạo giao diện cập nhật giỏ hàng
+    function createUpdateCartButtons(product, quantity) {
+        console.log(product);
+        return `
+            <div class="update-cart-btn d-flex align-items-center justify-content-stretch">
+                <button onclick="minusCart({
+                                'name': '${product.name}',
+                                'slug': '${product.slug}',
+                                'id': ${product.id},
+                                'price': ${product.price},
+                                'image1': '${product.image1}'
+                            })" class="minus-cart" style="width: 15%; background-color: transparent;">
+                    <i class="fa-solid fa-minus"></i>
+                </button>
+                
+               <input disabled type="text" class="count-cart count-cart-${product.id} form-control text-center" min="1" value="${quantity}" style="width: 30px; text-align: center; user-select: none " />
+                
+                <button onclick="plusCart({
+                                'name': '${product.name}',
+                                'slug': '${product.slug}',
+                                'id': ${product.id},
+                                'price': ${product.price},
+                                'image1': '${product.image1}'
+                            })" class="plus-cart" style="width: 15%; background-color: transparent;">
+                    <i class="fa-solid fa-plus"></i>
+                </button>
+            </div>
+        `;
+    }
+    // Hàm hiển thị sản phẩm dựa trên trạng thái trong giỏ hàng
+    function displayProduct(product) {
+        let html = ''
+        if (isInCart(product.id)) {
+            let cartArray = getCartSessionArray();
+
+            // Nếu sản phẩm đã có trong giỏ hàng, hiển thị giao diện cập nhật
+            let item = cartArray.find(item => item.id === product.id);
+            html += createUpdateCartButtons(product, item.quantity);
+        } else {
+            // Nếu sản phẩm chưa có trong giỏ hàng, hiển thị nút chọn mua
+            html +=  createAddToCartButton(product);
+        }
+        return html;
+    }
+
+    
+    function displayProductByTab(){
+        let tablinks = $(".for-you-item");
+        let tabCollection = $(".tab-collection");
+        let allBtn = $(".tab-all");
+        for (let i = 0; i < tablinks.length; i++) {
+            tablinks[i].addEventListener("click", function() {
+                let current = document.querySelectorAll(".for-you-item.active");
+                current[0].classList.remove("active");
+                this.classList.add("active");
+                let id = parseInt($(this).attr("data-tab"));
+                $.ajax({
+                    url: "home/switch_collection",
+                    method: "POST",
+                    dataType: 'json',  // Yêu cầu dữ liệu trả về dưới dạng JSON
+                    data: {
+                        id: id, 
+                    },
+                    success: function(res){
+
+                        let html = "";
+                        res.map((item)=>{
+                            html += `
+                            <div class="col col-sm-12 col-md-3 col-lg-24 mb-3"> 
+                                <div class="single-product  ">
+                                    <a href="product/${item.slug}" class="product-f">
+                                        <div style="padding-top: 100%" class="position-relative">
+                                            <img src="${item.image1}" alt="Product Img" style="inset:0" class="position-absolute img-products h-100 w-100 object-fit-cover" />
+                                        </div>
+                                    </a>
+
+                                    <a href="product/${item.slug}" class="product-dsc">
+                                        <p>${item.name}</p>
+                                        <span>${Math.floor(item.price).format(0)} VNĐ</span>
+                                    </a>
+                                
+                                    <div class="cart-action-btn" productId="${item.id}">
+                                            ${displayProduct(item)}
+                                    
+                                    </div>
+                                </div>
+                            </div>
+                            `
+                        })
+
+                        tabCollection.html(()=>{
+                            return `${html}`
+                            });
+                    },
+                    error: function(err){
+                        alert('Thêm vào giỏ hàng thất bại!', err);
+                    }
+
+                })
+                if(i === 0){
+                    allBtn.attr('href', 'collection/mon-man-an-com-hang-ngay')
+                }
+                else if(i === 1){
+                    allBtn.attr('href', 'collection/gia-vi-do-kho');
+
+                }
+                else{
+                    allBtn.attr('href', 'collection/trai-cay-theo-mua');
+                }
+            });
+        }
+    }
+
+    displayProductByTab();
     </script>
     
 </body>

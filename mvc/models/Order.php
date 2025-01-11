@@ -9,7 +9,7 @@ class Order extends BaseModel{
     }
     public function findOrder($id){
         $query = "select * from $this->table where id =$id";
-        return $this->returnData($this->_query($query));
+        return $this->returnOne($this->_query($query));
     }
     public function deleteOrder($id){
         $res = $this->delete($this->table, ['id' => $id]);
@@ -33,7 +33,7 @@ class Order extends BaseModel{
     }
     public function getTotalOrderCount(){
         $query = "SELECT COUNT(*) as total FROM $this->table ";
-        $data = $this->returnData($this->_query($query));
+        $data = $this->returnOne($this->_query($query));
         return $data;
     }
 
@@ -90,17 +90,30 @@ class Order extends BaseModel{
 
     function getUncompletedOrderscount(){
         $query = "SELECT count(id) as count FROM $this->table  WHERE status = 'completed' ";
-        $data = $this->returnData($this->_query($query));
+        $data = $this->returnOne($this->_query($query));
         return $data;
     }
     function getMonthlyRevenue($month){
         $query = "SELECT SUM(total_price) as count FROM orders WHERE MONTH(created_at) = $month And status = 'completed' ";
-        $data = $this->returnData($this->_query($query));
+        $data = $this->returnOne($this->_query($query));
         return $data;
     }
     function getYearlyRevenue($year){
         $query = "SELECT SUM(total_price) as count FROM orders WHERE YEAR(created_at) = $year And status = 'completed' ";
-        $data = $this->returnData($this->_query($query));
+        $data = $this->returnOne($this->_query($query));
         return $data;
+    }
+
+       public function findOrderOfUser($userId){
+        // $query = "SELECT od.*, o.status, o.created_at, o.total_price FROM `orders` o JOIN `order_details` od ON o.id = od.order_id  WHERE o.user_id = $userId ORDER BY o.created_at DESC;";
+        $query = "SELECT o.* FROM `orders` o RIGHT JOIN `order_details` od ON o.id = od.order_id  WHERE o.user_id = $userId GROUP BY o.id";
+        $query = $this->_query($query);
+        $orders = array();
+        if($query){
+            while ($row = mysqli_fetch_assoc($query)) {
+                $orders[] = $row;
+            }
+        }
+        return $orders;
     }
 }

@@ -23,6 +23,17 @@ class DashboardController extends Controller{
         $yearlyRevenueStatistic = $this->OrderModel->getYearlyRevenue($y);
         $userStatistic = $this->UserModel->getUsersCount(1);
         $employeeStatistic = $this->UserModel->getUsersCount(3);
+        $statusStatistic = $this -> OrderModel-> getStatusStatistics();
+        $statusStatistic = json_encode($statusStatistic);
+
+        $revenueByMonths = $this -> OrderModel->getRevenueByMonth();
+        $revenueByMonths = json_encode($revenueByMonths);
+
+        $uncompletedOrderStatistic = $this->OrderModel->getUncompletedOrdersCount();
+        $m = date("m");
+        $monthlyRevenueStatistic = $this->OrderModel->getMonthlyRevenue($m);
+        $y = "20".date("y");
+        $yearlyRevenueStatistic = $this->OrderModel->getYearlyRevenue($y);
       
         $data = [
             'page'          => 'home/index',
@@ -33,11 +44,13 @@ class DashboardController extends Controller{
             'yearlyRevenueStatistic' => $yearlyRevenueStatistic,
             'userStatistic' => $userStatistic,
             'employeeStatistic' => $employeeStatistic,
-            // 'data_tksp2' => $data_tksp2,
-            // 'data_tksp3' => $data_tksp3,
-
-            // 'data_index'    => $data_index,
+            'statusStatistic' => $statusStatistic,
+            'uncompletedOrderStatistic' => $uncompletedOrderStatistic,
+            'monthlyRevenueStatistic' => $monthlyRevenueStatistic,
+            'yearlyRevenueStatistic' => $yearlyRevenueStatistic,
+            'revenueByMonths' => $revenueByMonths,
         ];
         $this->view('dashboard/dashboard-layout',$data);
     }
+
 }

@@ -9,7 +9,7 @@
 				<div class="pages-title-text text-center">
 					<h2>Giới Thiệu</h2>
 					<ul class="text-left">
-						<li><a href="?act=home">Trang chủ</a></li>
+						<li><a href="/">Trang chủ</a></li>
 						<li><span> // </span>Giới Thiệu</li>
 					</ul>
 				</div>

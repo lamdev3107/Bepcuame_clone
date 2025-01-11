@@ -1,7 +1,7 @@
 <?php
     class BaseModel extends DB{
         
-        function returnData($query){
+        function returnOne($query){
             $data = null;
             if($query){
                 while ($row = mysqli_fetch_assoc($query)) {

@@ -77,7 +77,8 @@
         
             <div class="form-group">
                 <label for="">Mô tả</label>
-                <textarea style="min-height: 200px" class="min-h- form-control" id="summernote" placeholder="" name="description"></textarea>
+                <!-- id="summernote" -->
+                <textarea style="min-height: 200px" class="min-h- form-control"  placeholder="" name="description"></textarea>
             </div>
             
 

@@ -66,7 +66,10 @@
                             </li>
                             <ul class=" account-box-menu flex-column align-items-start position-absolute " >
                                 <li style="padding: 4px 0; margin-top:6px">
-                                    <a href="account">Tài khoản</a>
+                                    <a href="account/profile">Tài khoản</a>
+                                 </li>
+                                 <li style="padding: 4px 0; ">
+                                    <a href="account/myorders">Đơn hàng của tôi</a>
                                  </li>
                                   <?php
                                     if(isset($_SESSION['user']) && ($_SESSION['user']['auth_id'] == 2|| $_SESSION['user']['auth_id'] == 3)){ ?>
@@ -143,7 +146,7 @@
                                 <span>Tổng tiền tạm tính: <span class="text-danger fw-bold"> <?=number_format($thanhtien)?> VNĐ</span>
 
                             </div>
-                            <a class=" d-block  p-2 rounded go-checkout-btn mx-3"  href="cart">Tiến hành thanh toán</a>
+                            <a class=" d-block  p-2 rounded go-checkout-btn mx-3"  href="cart">Tiến hành đặt hàng</a>
 
                         <?php  }else{ ?>
                             <p>Giỏ hàng chưa có sản phẩm nào</p>
@@ -161,7 +164,7 @@
             <?php  if($data_collection !== NULL) ?>
             <ul>
 
-                <li class="mainmenu-item"><a href="?act=home">Trang chủ</a></li>
+                <li class="mainmenu-item"><a href="/">Trang chủ</a></li>
                 </li>
                 <li class="mainmenu-item">
                     <a href="collection/all">Menu Bếp của mẹ
@@ -189,7 +192,7 @@
             <div class="mobile-menu">
                 <nav id="dropdown">
                     <ul>
-                        <li><a href="?act=home">Trang chủ</a>
+                        <li><a href="/">Trang chủ</a>
                         </li>
                         <li><a href="?act=shop">Cửa hàng</a>
                             <ul>
@@ -264,7 +267,7 @@
         let re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\.' : '$') + ')';
         return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$&,');
     }
-     function findProductByName(name){
+    function findProductByName(name){
         // console.log(name);
         $.ajax({
             
@@ -278,27 +281,26 @@
                 console.log("Lỗi tìm kiếm sản phẩm", err);
             },
             success: function(products) {
-                console.log("check", products);
                 $('.search-drop').empty();
                 $('.search-drop').html(() => {
                     if(products.length > 0){
                         return ` 
                         <p class="fw-bold px-2 py-3 text-start border-bottom">Kết quả tìm kiếm cho <span class="text-danger keyword fw-bold">${name}</span></p>
                         <div class="overflow-auto pr-2" style="max-height: 350px">
-                                    ${products.map(product => (
-                                    `<a href="product/${product.slug}" class="p-2 d-flex align-items-start gap-2 border-bottom">
-                                        
-                                        <div  style="width: 70px; height: 70px">
-                                            <img src="${product.image1}" alt="" class="object-fit-cover w-100 h-100" />
-                                        </div>
-                                        <div class="text-start " style="flex: 1">
-                                            <p class="fw-bold mb-1">${product.name}</p>
-                                            <span class="text-danger fw-bold" style="font-size: 14px">${Math.floor(product.price).format(0)}đ</span>
-                                        </div>
-                                       
-                                    </a>`)
-                                    ).join(' ')}
-                            </div>`
+                            ${products.map(product => (
+                            `<a href="product/${product.slug}" class="p-2 d-flex align-items-start gap-2 border-bottom">
+                                
+                                <div  style="width: 70px; height: 70px">
+                                    <img src="${product.image1}" alt="" class="object-fit-cover w-100 h-100" />
+                                </div>
+                                <div class="text-start " style="flex: 1">
+                                    <p class="fw-bold mb-1">${product.name}</p>
+                                    <span class="text-danger fw-bold" style="font-size: 14px">${Math.floor(product.price).format(0)}đ</span>
+                                </div>
+                                
+                            </a>`)
+                            ).join(' ')}
+                    </div>`
                        
                     }else{
                         return `<p class="fw-bold px-2 py-3 text-start border-bottom">Không tìm thấy kết quả phù hợp với từ khóa <span class="text-danger keyword fw-bold">${name}</span></p> `;
@@ -310,8 +312,9 @@
         });
     }
     $(document).ready(function(){
+        let inputSearch = $('.header-search-input')
        
-        $('.header-search-input').on('input', function() {
+        inputSearch.on('input', function() {
             let query = $(this).val();
             // setTimeout(() => {
                 if (query !== '') {
@@ -324,11 +327,20 @@
                 }
             // }, 1000)
         });
-        $('.header-search-input').on('blur', function() {
-           $(this).val("");
-            $('.search-drop').addClass('d-none');
 
-        });
+        document.addEventListener('click', (e) => {
+            if(!document.querySelector('.search-drop').contains(e.target) && !document.querySelector('.header-search-input').contains(e.target)){
+                $('.search-drop').removeClass('d-none');
+                $('.search-drop').addClass('d-none');
+            }
+                
+        })
+        
+        // $('.header-search-input').on('blur', function() {
+        //    $(this).val("");
+        //     $('.search-drop').addClass('d-none');
+
+        // });
 
 
      

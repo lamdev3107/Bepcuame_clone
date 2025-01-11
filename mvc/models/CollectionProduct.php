@@ -10,7 +10,7 @@ class CollectionProduct extends BaseModel{
     }
     public function findCollectionProduct($id){
         $query = "select * from $this->table where id =$id";
-        return $this->returnData($this->_query($query));
+        return $this->returnOne($this->_query($query));
     }
     public function deleteCollectionProduct($dataWhere){
         $res = $this->delete($this->table, $dataWhere);
@@ -35,6 +35,24 @@ class CollectionProduct extends BaseModel{
         return $data;
     }
 
+    function filterProductByPrice($collection_id,  $filterWhere){
+        $collection_id = (int)$collection_id;
+        $sql = "SELECT * FROM $this->table as cp
+        LEFT JOIN products AS p ON cp.product_id = p.id
+        WHERE cp.collection_id = $collection_id AND ($filterWhere)
+        ORDER BY created_at DESC";
+        $query = $this->_query($sql);
+        $data = NULL;
+        if($query){
+            while ($row = mysqli_fetch_assoc($query)) {
+                $data[] = $row;
+            }
+        }
+
+        return $data;
+        // return ['sql' => $sql];
+    }
+
     function getProductIdsOfCollection($collectionId){
         $sql = "SELECT product_id FROM $this->table WHERE collection_id = $collectionId";
         $query = $this->_query($sql);
@@ -46,7 +64,5 @@ class CollectionProduct extends BaseModel{
         }
         return $data;
     }
-
-    
    
 }

@@ -48,17 +48,17 @@
 						<div class="mb-3">
 							<label for="exampleInputEmail1" class="form-label">Họ</label>
 							<span class="text-danger">*</span>
-							<input type="text" name="lastname" class="form-control" placeholder="Họ..."  >
+							<input type="text" name="lastname" required class="form-control" placeholder="Họ..."  >
 						</div>
 						<div class="mb-3">
 							<label for="exampleInputEmail1" class="form-label">Tên</label>
 							<span class="text-danger">*</span>
-							<input type="text" name="firstname" class="form-control" placeholder="Tên..." >
+							<input type="text" name="firstname" required class="form-control" placeholder="Tên..." >
 						</div>
 						<div class="mb-3">
-							<label for="exampleInputEmail1" class="form-label">Tài khoản</label>
+							<label for="exampleInputEmail1" class="form-label">Địa chỉ email</label>
 							<span class="text-danger">*</span>
-							<input type="text" class="form-control" name="username"  placeholder="Tài khoản...">
+							<input type="email" required class="form-control" name="email"  placeholder="example@gmail.com...">
 						</div>
 						<div class="mb-3">
 							<label for="exampleInputPassword1" class="form-label">Mật khẩu</label>
@@ -68,23 +68,10 @@
 						<div class="mb-3">
 							<label for="exampleInputEmail1" class="form-label">Số điện thoại</label>
 							<span class="text-danger">*</span>
-							<input type="text" name="phone" class="form-control" placeholder="Số điện thoại của bạn..."  >
+							<input type="text" name="phone" required class="form-control" placeholder="Số điện thoại của bạn..."  >
 						</div>
-						<div class="mb-2">
-							<label for="exampleInputEmail1" class="form-label">Địa chỉ</label>
-							<span class="text-danger">*</span>
-							<input type="text" name="address" class="form-control" placeholder="Địa chỉ của bạn..." >
-						</div>
-					  	<div class="mb-3">
-							<label for="disabledSelect" class="form-label">Chọn giới tính</label>
-							<span class="text-danger">*</span>
-							<select id="disabledSelect" name="gender" class="form-select">
-								<option value="male">Nam</option>
-								<option value="female">Nữ</option>
-								<option value="other">Khác</option>
-							</select>
-						</div>
-						<button type="submit" class="w-100 mt-3 btn btn-warninga">Đăng ký tài khoản</button>
+					
+						<button type="submit" class="w-100 mt-3 btn btn-warning">Đăng ký tài khoản</button>
 					</form>
 				</div>
 			</div>

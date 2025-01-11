@@ -472,25 +472,25 @@
 require_once("mvc/views/client/quickview.php")
 ?>
 <script>
-    window.fbAsyncInit = function() {
-        FB.init({
-            appId: '2652621865018691',
-            xfbml: true,
-            version: 'v7.0'
-        });
-        FB.AppEvents.logPageView();
-    };
+    // window.fbAsyncInit = function() {
+    //     FB.init({
+    //         appId: '2652621865018691',
+    //         xfbml: true,
+    //         version: 'v7.0'
+    //     });
+    //     FB.AppEvents.logPageView();
+    // };
 
-    (function(d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) {
-            return;
-        }
-        js = d.createElement(s);
-        js.id = id;
-        js.src = "https://connect.facebook.net/en_US/sdk.js";
-        fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));
+    // (function(d, s, id) {
+    //     var js, fjs = d.getElementsByTagName(s)[0];
+    //     if (d.getElementById(id)) {
+    //         return;
+    //     }
+    //     js = d.createElement(s);
+    //     js.id = id;
+    //     js.src = "https://connect.facebook.net/en_US/sdk.js";
+    //     fjs.parentNode.insertBefore(js, fjs);
+    // }(document, 'script', 'facebook-jssdk'));
     
      $(document).ready(function() {
         //----------Carousel ------------//
@@ -609,11 +609,12 @@ require_once("mvc/views/client/quickview.php")
     // ADD CART //
     function decrease(){
         let count = parseInt($(`.count-cart`).val());
-        --count;
-        if(count < 1){
+        if(count == 1){
             count = 1;
             return;
         }
+        --count;
+
         
         $(`.count-cart`).val(count);
     }
@@ -670,7 +671,7 @@ require_once("mvc/views/client/quickview.php")
                         <span>Tổng tiền tạm tính: <span class="text-danger fw-bold"> ${thanhtien}đ</span>
 
                     </div>
-                    <a class=" d-block  p-2 rounded go-checkout-btn mx-3"  href="cart">Tiến hành thanh toán</a>
+                    <a class=" d-block  p-2 rounded go-checkout-btn mx-3"  href="cart">Tiến hành đặt hàng</a>
                 `
         }
         let returnHTML = `

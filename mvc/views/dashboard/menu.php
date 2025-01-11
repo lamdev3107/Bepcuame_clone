@@ -62,29 +62,24 @@
   </li>
 
   <li class="nav-item">
-    <a class="nav-link collapsed" href="dashboard/order" data-toggle="collapse" data-target="#collapseTwo">
+    <a class="nav-link collapsed" href="dashboard/order" >
       <i class="fas fa-fw fa-table"></i>
       <span>Quản lý đơn hàng</span>
     </a>
-    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-          <div class=" collapse-inner rounded">
-              <a class="collapse-item"  href="dashboard/order">Danh sách đơn hàng</a>
-          </div>
-           <div class="collapse-inner rounded">
-            <a class="collapse-item"  href="dashboard/order/statistic">Thống kê đơn hàng</a>
-        </div>
-    </div>
+    <!-- <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+      <div class=" collapse-inner rounded">
+          <a class="collapse-item"  href="dashboard/order">Danh sách đơn hàng</a>
+      </div>
+      <div class="collapse-inner rounded">
+        <a class="collapse-item"  href="dashboard/order/statistic">Thống kê đơn hàng</a>
+      </div>
+    </div> -->
     <!-- <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
        
     </div> -->
   </li>
   
-<!-- 
-  <li class="nav-item">
-    <a class="nav-link" href="?mod=danhmuc">
-      <i class="fas fa-fw fa-table"></i>
-      <span>Quản lý danh mục sản phẩm</span></a>
-  </li> -->
+
   <li class="nav-item">
     <a class="nav-link" href="dashboard/banner">
       <i class="fas fa-fw fa-table"></i>
@@ -103,8 +98,8 @@
 
 </ul>
 <script>
-const tabLinks = document.querySelectorAll('.nav-link');
-const tabContents = document.querySelectorAll('.tab-content');
+const tabs = document.querySelectorAll('.nav-link');
+const tabItems = document.querySelectorAll('.tab-content');
 const collapseItems = document.querySelectorAll('.collapse-item');
 let url = "<?php
   function getUrl(){
@@ -125,7 +120,7 @@ collapseItems.forEach((item) => {
   if(href == url){
     item.classList.add('active');
     let tabId = item.getAttribute('href').slice(1);
-    tabContents.forEach(tab => {
+    tabItems.forEach(tab => {
       if(tab.id == tabId){
         tab.classList.add('show');
         tab.classList.add('active');
@@ -136,12 +131,12 @@ collapseItems.forEach((item) => {
     })
   }
 })
-tabLinks.forEach(link => {
+tabs.forEach(link => {
     
     let href = link.getAttribute('href');
     
     if(url.includes(href) ){
-      tabLinks.forEach(link => link.classList.remove('active'));
+      tabs.forEach(link => link.classList.remove('active'));
       link.classList.add('active');
         $(`.collapse-item[href="${href}"]`).addClass('active');
         // $(`.nav-link collapsed[href="${href}"]`).addClass('active');

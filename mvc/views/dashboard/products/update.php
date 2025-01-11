@@ -78,7 +78,7 @@
             
                 <div class="form-group">
                     <label for="">Mô tả</label>
-                    <textarea style="min-height: 200px" class=" form-control" id="summernote" placeholder="" name="description"><?=$data['description']?></textarea>
+                    <textarea style="min-height: 200px" class=" form-control" placeholder="" name="description"><?=$data['description']?></textarea>
                 </div>
                 
 

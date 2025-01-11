@@ -7,6 +7,7 @@
             <div class="filter-sidebar">
                 <div class="filter-section px-2 py-2">
                     <div class="collection-list">
+                        <li class="home"  ><a href="collection/all"><i class="mdi mdi-menu-right"></i>Tất cả</a></li>
                         <?php foreach ($data_collection as $row) {?>
                             <li class="<?=$row['id'] == $collection['id'] ? 'active' : ''  ?>"><a href="collection/<?=$row['slug']?>"><i class="mdi mdi-menu-right"></i><?=$row['name']?></a></li>
                         <?php  }?>
@@ -20,40 +21,40 @@
                 <h4 class="floatleft">Mức giá</h4>
             </div>
             <div class="filter-sidebar">
-                <div class="filter-section px-2 py-2">
+                <div class="filter-section price-filters px-2 py-2">
                     <div class="form-check form-check-custom">
-                        <input type="checkbox" id="price1"  value="" >
+                        <input type="checkbox" class="price-filter" id="price1"  value="under-100k" >
                         <label for="price1" class="form-check-label" >
                             Giá dưới 100.000đ
                         </label>
                     </div>
                     <div class="form-check form-check-custom">
-                        <input type="checkbox" id="price1"  value="" >
-                        <label for="price1" class="form-check-label" >
+                        <input type="checkbox" class="price-filter" id="price2"  value="100k-200k" >
+                        <label for="price2" class="form-check-label" >
                             100.000đ - 200.000đ
                         </label>
                     </div>
                     <div class="form-check form-check-custom">
-                        <input type="checkbox" id="price1"  value="" >
-                        <label for="price1" class="form-check-label" >
+                        <input type="checkbox" class="price-filter" id="price3"  value="200k-300k" >
+                        <label for="price3" class="form-check-label" >
                             200.000đ - 300.000đ
                         </label>
                     </div>
                     <div class="form-check form-check-custom">
-                        <input type="checkbox" id="price1"  value="" >
-                        <label for="price1" class="form-check-label" >
+                        <input type="checkbox" class="price-filter" id="price4"  value="300k-500k" >
+                        <label for="price4" class="form-check-label" >
                             300.000đ - 500.000đ
                         </label>
                     </div>
                     <div class="form-check form-check-custom">
-                        <input type="checkbox" id="price1"  value="" >
-                        <label for="price1" class="form-check-label" >
+                        <input type="checkbox" class="price-filter" id="price5"  value="500k-1m" >
+                        <label for="price5" class="form-check-label" >
                             500.000đ - 1.000.000đ
                         </label>
                     </div>
                     <div class="form-check form-check-custom">
-                        <input type="checkbox" id="price1"  value="" >
-                        <label for="price1" class="form-check-label" >
+                        <input type="checkbox" class="price-filter" id="price6"  value="above-1m" >
+                        <label for="price6" class="form-check-label" >
                             Giá trên 1.000.000đ
                         </label>
                     </div>
@@ -98,7 +99,7 @@
                                             }
                                             else{
                                                 echo 
-                                                '<div style="margin: 0 !important" class="update-cart-btn w-100  d-flex align-items-center justify-content-stretch">
+                                                '<div class="update-cart-btn w-100  d-flex align-items-center justify-content-stretch">
                                                         <button onclick="minusCart({
                                                             name: \'' . $item['name'] . '\',
                                                             slug: \'' . $item['slug'] . '\',
@@ -124,7 +125,7 @@
                                             }
                                         }
                                         else{
-                                            echo '<button style="margin: 0 !important" productId="' . $item['id'] . '"  onclick="addToCart({
+                                            echo '<button productId="' . $item['id'] . '"  onclick="addToCart({
                                                 name: \'' . $item['name'] . '\',
                                                 slug: \'' . $item['slug'] . '\',
                                                 id: ' . $item['id'] . ',
@@ -145,8 +146,11 @@
             
         </div>
     </div>
-    <div class="s-side-text">
-       
-    </div>
+ 
    
 </div>
+
+<script>
+
+</script>
+

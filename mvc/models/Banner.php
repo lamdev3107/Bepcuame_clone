@@ -12,7 +12,7 @@ class Banner extends BaseModel{
     }
     public function findBanner($id){
         $query = "select * from $this->table where id =$id";
-        return $this->returnData($this->_query($query));
+        return $this->returnOne($this->_query($query));
     }
     public function deleteBanner($id){
         $res = $this->delete($this->table, ['id' => $id]);
@@ -30,7 +30,7 @@ class Banner extends BaseModel{
     }
     function getBannerDetails($id){
         $query = $this->select_row($this->table,'*', ['id' =>  $id]);
-        return $this->returnData($query);
+        return $this->returnOne($query);
     }
      function getBannersLimit($a, $b){
 
@@ -41,7 +41,7 @@ class Banner extends BaseModel{
     }
     function getBannersCount(){
         $query = "SELECT count(id) as count FROM banners ";
-        $data = $this->returnData($this->_query($query));
+        $data = $this->returnOne($this->_query($query));
         return $data;
     }
 }

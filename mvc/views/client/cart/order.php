@@ -103,14 +103,14 @@
 											Thanh toán khi giao hàng (COD)
 										</label>
 									</div>
-									<div class="form-checkk">
+									<!-- <div class="form-checkk">
 										<input class="form-check-input me-2" value="card" type="radio" name="payment_method" id="flexRadioDefault2" >
 										<label 
 										style="font-size: 15px"
 										class="form-check-label" for="flexRadioDefault2">
 											Chuyển khoản qua ngân hàng
 										</label>
-									</div>
+									</div> -->
 								</div>
 							</div>
 

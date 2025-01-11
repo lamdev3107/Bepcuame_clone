@@ -6,9 +6,9 @@ require_once "./mvc/core/redirect.php";
 class User extends BaseModel{
     private $table = 'users';
 
-    public function login($username, $password){
-        $query = "SELECT * from $this->table  WHERE username = '" . $username . "' AND password = '" . $password . "' AND status = 1";
-        $user = $this->returnData($this->_query($query));
+    public function login($email, $password){
+        $query = "SELECT * from $this->table  WHERE email = '" . $email . "' AND password = '" . $password . "' AND status = 1";
+        $user = $this->returnOne($this->_query($query));
         if($user!=NULL && $user){
             return $user;
         }
@@ -26,7 +26,7 @@ class User extends BaseModel{
     }
     public function findUser($id){
         $query = "select * from $this->table where id =$id";
-        return $this->returnData($this->_query($query));
+        return $this->returnOne($this->_query($query));
     }
     public function deleteUser($id){
         $res = $this->delete($this->table, ['id' => $id]);
@@ -48,9 +48,11 @@ class User extends BaseModel{
         else return false;
     }
 
+   
+
     public function getUsersCount($auth_id){
         $query = "SELECT COUNT(id) as count FROM $this->table WHERE auth_id = $auth_id";
-        return $this->returnData($this->_query($query));
+        return $this->returnOne($this->_query($query));
     }
    
 }

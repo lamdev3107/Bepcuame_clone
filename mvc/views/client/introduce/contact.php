@@ -7,7 +7,7 @@
 				<div class="pages-title-text text-center">
 					<h2>Thông tin liên hệ</h2>
 					<ul class="text-left">
-						<li><a href="?act=home">Trang chủ</a></li>
+						<li><a href="/">Trang chủ</a></li>
 						<li><span> // </span>Liên hệ</li>
 					</ul>
 				</div>

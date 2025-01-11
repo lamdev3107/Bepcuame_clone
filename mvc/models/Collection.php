@@ -12,11 +12,12 @@ class Collection extends BaseModel{
     }
     public function findCollection($id){
         $query = "select * from $this->table where id =$id";
-        return $this->returnData($this->_query($query));
+        return $this->returnOne($this->_query($query));
     }
     public function findCollectionBySlug($slug){
-        $query = "select * from $this->table where slug = '$slug'";
-        return $this->returnData($this->_query($query));
+       
+        $query = "select * from $this->table where slug = '$slug' ";
+        return $this->returnOne($this->_query($query));
     }
     public function getProductsOfCollection($id, $orderBy='p.created_at DESC',  $limit = 20, $offset=0){
         // $products = $this->select_array('products', '*', ['collection_id' => $id]);
@@ -55,7 +56,7 @@ class Collection extends BaseModel{
     }
     function getCollectionDetails($id){
         $query = $this->select_row($this->table,'*', ['id' =>  $id]);
-        return $this->returnData($query);
+        return $this->returnOne($query);
     }
      function getCollectionsLimit($a, $b){
 
@@ -66,7 +67,7 @@ class Collection extends BaseModel{
     }
     function getCollectionsCount(){
         $query = "SELECT count(id) as count FROM collections ";
-        $data = $this->returnData($this->_query($query));
+        $data = $this->returnOne($this->_query($query));
         return $data;
     }
 

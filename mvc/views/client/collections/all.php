@@ -4,7 +4,7 @@
             <div class="row">
                 <div class="col-xs-12">
                     <ul class="text-left">
-                        <li><a href="?act=home">Trang chủ</a></li>
+                        <li><a href="/">Trang chủ</a></li>
                         <li><span  class="mx-2"> / </span><a  href="collection/index"> Danh mục </a></li>
                         <li><span  class="mx-2"> / </span class="mx-2">Tất cả sản phẩm </li>
                     </ul>
@@ -19,7 +19,7 @@
 		<div class="row">
 			<!-- Category-left -->
 			<div class="col  d-md-none d-lg-block col-lg-3  border-end">
-				<?php require_once("category.php") ?>
+				<?php require_once("left-sidebar.php") ?>
 			</div>
 			<div class="col col-sm-12 col-lg-9 ">
 				<div class="">
@@ -68,7 +68,7 @@
                                                 <span><?= number_format($row['price']) ?> VNĐ</span>
                                             </a>
                                         
-                                            <div class="cart-action-btn" productId="<?=$row['id']?>">
+                                            <div class="" productId="<?=$row['id']?>">
                                                 <?php 
                                                     //Kiểm tra sản phẩm đã có trong giỏ hàng chưa
                                                     if(isset($_SESSION['cart'])){

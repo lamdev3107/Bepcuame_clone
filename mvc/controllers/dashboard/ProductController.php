@@ -133,59 +133,54 @@ class ProductController extends Controller{
     public function update(){
         $id = $_GET['id'];
         $data_promotion = $this-> PromotionModel->getAllPromotion();
-        $product = $this->ProductModel->findProduct($id);
+        $product = $this->ProductModel->findProductById($id);
         if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
             $target_dir = "./public/img/products/";  // thư mục chứa file upload
             $image1 = "";
-            $target_file = $target_dir . basename($_FILES["image1"]["name"]); // link sẽ upload file lên
-            $status_upload = move_uploaded_file($_FILES["image1"]["tmp_name"], $target_file);
-            if ($status_upload) { // nếu upload file không có lỗi 
-                $image1 =  $target_file;
-            }
-
             $image2 = "";
-            if(isset($_FILES["image2"]["name"])){
-                $target_file = $target_dir . basename($_FILES["image2"]["name"]); // link sẽ upload file lên
-                $status_upload = move_uploaded_file($_FILES["image2"]["tmp_name"], $target_file);
-                if ($status_upload) { // nếu upload file không có lỗi 
-                    $image2 =   $target_file;
-                }
-            }
-         
-
             $image3 = "";
-            if(isset($_FILES["image3"]["tmp_name"])){
-                $target_file = $target_dir . basename($_FILES["image3"]["name"]); // link sẽ upload file lên
-                $status_upload = move_uploaded_file($_FILES["image3"]["tmp_name"], $target_file);
-                if ($status_upload) { // nếu upload file không có lỗi 
-                    $image3 =   $target_file;
+            $image4 = "";
+            
+            $imgFileList = array($_FILES["image1"], $_FILES["image2"], $_FILES["image3"], $_FILES["image4"]);
+            for($i = 0; $i < count($imgFileList); $i++){
+                if($imgFileList[$i]["name"] != ""){
+                    $target_file = $target_dir . basename($imgFileList[$i]["name"]); // link sẽ upload file lên
+                    $status_upload = move_uploaded_file($imgFileList[$i]["tmp_name"], $target_file);
+                    if ($status_upload) { // nếu upload file không có lỗi 
+                        switch($i){
+                            case 0:
+                                $image1 =  $target_file;
+                                break;
+                            case 1:
+                                $image2 =  $target_file;
+                                break;
+                            case 2:
+                                $image3 =  $target_file;
+                                break;
+                            case 3:
+                                $image4 =  $target_file;
+                                break;
+                        }
+                    }
                 }
             }
            
-
-            $image4 = "";
-            if(isset($_FILES["image4"]["name"])){
-                $target_file = $target_dir . basename($_FILES["image4"]["name"]); // link sẽ upload file lên
-                $status_upload = move_uploaded_file($_FILES["image4"]["tmp_name"], $target_file);
-                if ($status_upload) { // nếu upload file không có lỗi 
-                    $image4 =   $target_file;
-                }
-            }
+             $data = array(
+                    'name'  =>   $_POST['name'],
+                    'price' => $_POST['price'],
+                    'stock' => $_POST['stock'],
+                    'slug' => HelperFunction::create_slug($_POST['name']),
+                    'promotion_id' =>  $_POST['promotion_id'],
+                    'description' =>  $_POST['description']
+                );
+            if($image1 != ""){$data['image1'] = $image1;}
+            if($image2 != ""){$data['image2'] = $image2;}
+            if($image3 != ""){$data['image3'] = $image3;}
+            if($image4 != ""){$data['image4'] = $image4;}
            
          
-            $data = array(
-                'name'  =>   $_POST['name'],
-                'price' => $_POST['price'],
-                'stock' => $_POST['stock'],
-                'slug' => HelperFunction::create_slug($_POST['name']),
-                'image1' => $image1,
-                'image2' => $image2,
-                'image3' => $image3,
-                'image4' => $image4,
-                'promotion_id' =>  $_POST['promotion_id'],
-                'description' =>  $_POST['description'],
-            );
+         
             foreach ($data as $key => $value) {
                 if (strpos($value, "'") != false) {
                     $value = str_replace("'", "\'", $value);

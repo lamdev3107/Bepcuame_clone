@@ -1,4 +1,7 @@
 /* ----------------- COMMON ---------------------------*/
+.active-text {
+  color: #008848;
+}
 .hidden {
   display: none !important;
 }
@@ -228,6 +231,9 @@
   }
 }
 /* Card Vertical */
+.card-action-btn button {
+  margin: 0 8px;
+}
 .cart-action-btn .update-cart-btn {
   padding: 0 8px;
   background: transparent;

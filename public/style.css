@@ -1919,7 +1919,7 @@ table {
 }
 table thead tr th,
 .order-complete table thead tr td {
-  line-height: 40px;
+  /* line-height: 40px; */
   text-align: center;
   text-transform: uppercase;
 }

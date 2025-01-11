@@ -423,36 +423,7 @@
   .mobile-menu-area {
     display: block;
   }
-  .mobile-menu-area .mean-bar {
-    position: relative;
-  }
-  .mobile-menu-area .mean-bar::after {
-    content: "menu";
-    left: 10px;
-    position: absolute;
-    top: 20px;
-  }
-  .mean-nav li h5 {
-    margin-left: 20px;
-    padding: 5px;
-  }
-  .mean-nav li h5,
-  .mobile-menu-area .mean-bar::after {
-    color: #fff;
-    display: block;
-    font-weight: 600;
-    text-transform: uppercase;
-  }
-  .mean-container .mean-nav ul li li a {
-    opacity: 1;
-  }
-  .mean-container a.meanmenu-reveal {
-    margin: auto 0 auto auto;
-  }
-  .mean-container .mean-bar,
-  .mean-container .mean-nav {
-    background: #fe5858 none repeat scroll 0 0;
-  }
+
   header .logo,
   .middel-top .right a {
     line-height: 50px;

@@ -12,7 +12,7 @@ class Promotion extends BaseModel{
     }
     public function findPromotion($id){
         $query = "select * from $this->table where id =$id";
-        return $this->returnData($this->_query($query));
+        return $this->returnOne($this->_query($query));
     }
     public function deletePromotion($id){
         $res = $this->delete($this->table, ['id' => $id]);
@@ -23,7 +23,7 @@ class Promotion extends BaseModel{
     }
     function getPromotionDetails($id){
         $query = "select * from $this->table where id =$id";
-        return $this->returnData($this->_query($query));
+        return $this->returnOne($this->_query($query));
     }
      function getPromotionsLimit($a, $b){
 
@@ -34,7 +34,7 @@ class Promotion extends BaseModel{
     }
     function getPromotionsCount(){
         $query = "SELECT count(id) as count FROM promotions ";
-        $data = $this->returnData($this->_query($query));
+        $data = $this->returnOne($this->_query($query));
         return $data;
     }
 }

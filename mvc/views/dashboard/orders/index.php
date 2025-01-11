@@ -95,10 +95,7 @@
         <?php } ?>
     </table>
     <script>
-      $(document).ready(function() {
-        $('#dataTable').DataTable();
-      });
-
+     
       const tabLinks = document.querySelectorAll('.tab-link');
       const tabContents = document.querySelectorAll('.tab-content');
 
@@ -166,6 +163,11 @@
           
         });
       });
+      $(document).ready(function() {
+        $('#dataTable').DataTable();
+      });
+
+    
     </script>
   </div>
 </div>

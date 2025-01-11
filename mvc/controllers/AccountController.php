@@ -3,21 +3,107 @@ require_once "./mvc/core/redirect.php";
 
 class AccountController extends Controller{
     private $UserModel;
+    private $OrderModel;
     private $CollectionModel;
+    private $OrderDetailModel;
     public function __construct(){
         $this->CollectionModel = $this->model('Collection');
         $this->UserModel = $this->model('User');
+        $this->OrderModel = $this->model('Order');
+        $this->OrderDetailModel = $this->model('OrderDetail');
     }
-  
-    function login(){
+    function profile(){
         $data_collection = $this->CollectionModel->getAllCollection();
         if($_SERVER['REQUEST_METHOD'] == 'POST'){
-            $username = $_POST['username'];
-            $password = md5($_POST['password']);
-            if (strpos($username, "'") != false) {
-                $username = str_replace("'", "\'", $username);
+            $gender = 'Nam';
+            if($_POST['gender'] !== 'Chọn giới tính'){
+                $gender = $_POST['gender'];
             }
-            $user = $this->UserModel->login($username, $password);
+            $data = array(
+                'lastname' =>    $_POST['lastname'],
+                'firstname'  =>   $_POST['firstname'],
+                'gender' => $gender,
+                'phone' => $_POST['phone'],
+                'address'  =>   $_POST['address'],
+                'birthday' => $_POST['birthday'],
+                'email' => $_POST['email'],
+            );
+            foreach ($data as $key => $value) {
+                if (strpos($value, "'") != false) {
+                    $value = str_replace("'", "\'", $value);
+                    $data[$key] = $value;
+                }
+            }
+            $res = $this->UserModel->updateUser($_SESSION['user']['id'], $data);
+            if ($res === true) {
+                $redirect = new redirect('account/profile');
+                $_SESSION['alert_type'] = "success";
+                $_SESSION['alert_message'] ="Cập nhật tài khoản thành công!";
+                $_SESSION['alert_timer'] = true;
+                return;
+
+            } 
+            
+        }
+        if(isset($_SESSION['user'])){
+            $user = $this->UserModel->findUser($_SESSION['user']['id']);
+            $this->view('client/masterlayout',[
+                'tab' => 'profile',
+                'page'          => 'account/index',
+                'data_collection'     => $data_collection,
+                'user' => $user,
+            ]);
+            return;
+        }
+        $this->view('client/masterlayout',[
+            'tab' => 'profile',
+            'page'          => 'account/index',
+            'data_collection'     => $data_collection,
+        ]);
+    }
+
+
+    function myorders(){
+        $data_collection = $this->CollectionModel->getAllCollection();
+        $user = $this->UserModel->findUser($_SESSION['user']['id']);
+        $orders = $this -> OrderModel -> findOrderOfUser($_SESSION['user']['id']);
+        // $orders = "";
+        $this->view('client/masterlayout',[
+            'tab' => 'myorders',
+            'page'          => 'account/index',
+            'data_collection'     => $data_collection,
+            'user' => $user,
+            'orders' => $orders,
+        ]);
+    }
+
+    function changepassword(){
+        $data_collection = $this->CollectionModel->getAllCollection();
+        $user = $this->UserModel->findUser($_SESSION['user']['id']);
+        $orders = $this -> OrderModel -> findOrderOfUser($_SESSION['user']['id']);
+        if($_SERVER['REQUEST_METHOD'] == 'POST'){
+            $password = md5($_POST['password']);
+            if($user['password'] != $password){
+                $redirect = new redirect('account/changepassword');
+                setcookie('noti-type', 'error', time() + 2);
+                setcookie('noti-message', 'Mật khẩu hiện tại không chính xác, Vui lòng nhập lại!', time() + 2);
+                return;
+            }
+            else{
+                $new_password = md5($_POST['new_password']);
+                $data = array(
+                    'password' => $new_password,
+                );
+                $res = $this->UserModel->updateUser($_SESSION['user']['id'], $data);
+                if ($res === true) {
+                    $redirect = new redirect('account/changepassword');
+                    $_SESSION['alert_type'] = "success";
+                    $_SESSION['alert_message'] ="Đổi mật khẩu thành công!";
+                    $_SESSION['alert_timer'] = true;
+                    return;
+                } 
+            }
+            
          
             if ($user !== NULL) {
                 if($user['auth_id'] == 2 || $user['auth_id'] ==3){
@@ -30,7 +116,60 @@ class AccountController extends Controller{
                     $this->view('client/masterlayout',[
                         'page'          => 'account/login',
                         'categories'     => $data_collection,
-                        // 'data_index'    => $data_index,
+                    ]);
+                    return;
+                }
+            } else {
+                setcookie('noti-message', 'Tài khoản hoặc mật khẩu không chính xác', time() + 2);
+                setcookie('noti-type', 'error', time() + 2);
+                $redirect = new redirect('account/login');
+            }
+                        
+        }
+        $this->view('client/masterlayout',[
+            'tab' => 'changepassword',
+            'page'          => 'account/index',
+            'data_collection'     => $data_collection,
+            'user' => $user,
+            'orders' => $orders,
+        ]);
+    }
+
+    function orderdetail($id){
+        $data_collection = $this->CollectionModel->getAllCollection();
+        $order = $this->OrderModel->findOrder($id);
+        $user = $this->UserModel->findUser($_SESSION['user']['id']);
+        $orderDetails = $this->OrderDetailModel->getOrderDetailOfOrder($id);
+        $this->view('client/masterlayout',[
+            'tab' => 'orderdetail',
+            'page'          => 'account/index',
+            'data_collection'     => $data_collection,
+            'order' => $order,
+            'user' => $user,
+            'orderDetails' => $orderDetails,
+        ]);
+    }
+    function login(){
+        $data_collection = $this->CollectionModel->getAllCollection();
+        if($_SERVER['REQUEST_METHOD'] == 'POST'){
+            $email = $_POST['email'];
+            $password = md5($_POST['password']);
+            if (strpos($email, "'") != false) {
+                $email = str_replace("'", "\'", $email);
+            }
+            $user = $this->UserModel->login($email, $password);
+         
+            if ($user !== NULL) {
+                if($user['auth_id'] == 2 || $user['auth_id'] ==3){
+                    $_SESSION['user'] = $user;
+                    $redirect = new redirect('dashboard/');
+                    return;
+                }else{
+                    $_SESSION['user'] = $user;
+                    $redirect = new redirect('/');
+                    $this->view('client/masterlayout',[
+                        'page'          => 'account/login',
+                        'categories'     => $data_collection,
                     ]);
                     return;
                 }
@@ -49,30 +188,25 @@ class AccountController extends Controller{
     }
 
 
+
+
+
     function register(){
         $data_collection = $this->CollectionModel->getAllCollection();
         $check1 = 0;
         $data_check = $this->UserModel->getAllUser();
 
         if($_SERVER['REQUEST_METHOD'] == 'POST'){
-            foreach ($data_check as $value) {
-                if ( $value['username'] == $_POST['username']) {
+            foreach ($data_check as $element) {
+                if ( $element['email'] == $_POST['email']) {
                     $check1 = 1;
                 }
-            }
-
-            $gender = 'Nam';
-            if($_POST['gender'] !== 'Chọn giới tính'){
-                $gender = $_POST['gender'];
             }
             $data = array(
                 'lastname' =>    $_POST['lastname'],
                 'firstname'  =>   $_POST['firstname'],
-                'gender' => $gender,
                 'phone' => $_POST['phone'],
-                'email' =>    "",
-                'address'  =>   $_POST['address'],
-                'username' => $_POST['username'],
+                'email' => $_POST['email'],
                 'password' => md5($_POST['password']),
                 'auth_id' =>  1,
                 'status'  =>  1,
@@ -91,6 +225,7 @@ class AccountController extends Controller{
                     $_SESSION['alert_message'] ="Đăng ký tài khoản thành công thành công, Vui lòng đăng nhập lại!";
                     $_SESSION['alert_timer'] = true;
                     $redirect = new redirect('account/login');
+
                     return;
 
                 } else {
@@ -101,7 +236,6 @@ class AccountController extends Controller{
             } else {
                 setcookie('noti-type', 'error', time() + 2);
                 setcookie('noti-message', 'Tài khoản đã tồn tại, Vui lòng nhập lại!', time() + 2);
-                $redirect = new redirect('account/register');
 
             }
         $this->view('client/masterlayout',[
@@ -111,26 +245,16 @@ class AccountController extends Controller{
     }
     function logout(){
         unset($_SESSION['user']);
-        $redirect = new redirect('home');
+        $redirect = new redirect('index');
         session_destroy();
 
     }
-    function account()
-    {
-        // $data_danhmuc = $this->login_model->danhmuc();
 
-        // $data_chitietDM = array();
-
-        // for ($i = 1; $i <= count($data_danhmuc); $i++) {
-        //     $data_chitietDM[$i] = $this->login_model->chitietdanhmuc($i);
-        // }
-        // $data = $this->login_model->account();
-
-        // require_once('Views/index.php');
-    }
+   
+    
     function update(){
 
-        // if (isset($_POST['Ho'])) {
+        // if (isset($_POST['password'])) {
         //     $data = array(
         //         'Ho' =>    $_POST['Ho'],
         //         'Ten'  =>   $_POST['Ten'],

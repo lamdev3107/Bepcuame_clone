@@ -103,29 +103,7 @@ class OrderController extends Controller{
 
     }
 
-    public function statistic(){
-        $statusStatistic = $this -> OrderModel-> getStatusStatistics();
-        $statusStatistic = json_encode($statusStatistic);
-
-        $revenueByMonths = $this -> OrderModel->getRevenueByMonth();
-        $revenueByMonths = json_encode($revenueByMonths);
-
-        $uncompletedOrderStatistic = $this->OrderModel->getUncompletedOrdersCount();
-        $m = date("m");
-        $monthlyRevenueStatistic = $this->OrderModel->getMonthlyRevenue($m);
-        $y = "20".date("y");
-        $yearlyRevenueStatistic = $this->OrderModel->getYearlyRevenue($y);
-        
-        $data = [
-            'page'          => 'orders/statistic',
-            'statusStatistic' => $statusStatistic,
-            'uncompletedOrderStatistic' => $uncompletedOrderStatistic,
-            'monthlyRevenueStatistic' => $monthlyRevenueStatistic,
-            'yearlyRevenueStatistic' => $yearlyRevenueStatistic,
-            'revenueByMonths' => $revenueByMonths,
-        ];
-        $this->view('dashboard/dashboard-layout',$data);
-    }
+   
   
     public function delete()
     {   
